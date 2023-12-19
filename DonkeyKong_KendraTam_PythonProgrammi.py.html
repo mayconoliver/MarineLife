@@ -1,0 +1,1398 @@
+<html>
+<head>
+<title>DonkeyKong_KendraTam_PythonProgrammi.py</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #808080;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #cc7832;}
+.s3 { color: #6897bb;}
+.s4 { color: #6a8759;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+DonkeyKong_KendraTam_PythonProgrammi.py</font>
+</center></td></tr></table>
+<pre><span class="s0"># Kendra Tam</span>
+<span class="s0"># DonkeyKong_KendraTam.py</span>
+<span class="s0"># May 27, 2016</span>
+<span class="s0"># This program is simulating the arcade game Donkey Kong</span>
+
+<span class="s0">#importing</span>
+<span class="s2">import </span><span class="s1">pygame</span><span class="s2">, </span><span class="s1">sys</span>
+<span class="s2">from </span><span class="s1">pygame.locals </span><span class="s2">import </span><span class="s1">*</span>
+<span class="s2">import </span><span class="s1">random</span>
+
+<span class="s0">#Define Colour Values (R,G,B)</span>
+<span class="s1">BLACK = (</span><span class="s3">0</span><span class="s2">, </span><span class="s3">0</span><span class="s2">, </span><span class="s3">255</span><span class="s1">)</span>
+<span class="s1">GREEN = (</span><span class="s3">0</span><span class="s2">, </span><span class="s3">255</span><span class="s2">, </span><span class="s3">0</span><span class="s1">)</span>
+<span class="s1">RED = (</span><span class="s3">255</span><span class="s2">, </span><span class="s3">0</span><span class="s2">, </span><span class="s3">0</span><span class="s1">)</span>
+<span class="s1">LIGHTBLUE = (</span><span class="s3">0</span><span class="s2">, </span><span class="s3">200</span><span class="s2">, </span><span class="s3">255</span><span class="s1">)</span>
+<span class="s1">YELLOW = (</span><span class="s3">255</span><span class="s2">, </span><span class="s3">255</span><span class="s2">, </span><span class="s3">0</span><span class="s1">)</span>
+<span class="s1">PURPLE = (</span><span class="s3">170</span><span class="s2">, </span><span class="s3">0</span><span class="s2">, </span><span class="s3">225</span><span class="s1">)</span>
+<span class="s1">colours = [GREEN</span><span class="s2">, </span><span class="s1">RED</span><span class="s2">, </span><span class="s1">LIGHTBLUE</span><span class="s2">, </span><span class="s1">YELLOW</span><span class="s2">, </span><span class="s1">PURPLE]</span>
+
+<span class="s0">#declaring global variables</span>
+<span class="s1">leaderboard = {}</span>
+
+<span class="s1">score = </span><span class="s3">0</span>
+<span class="s1">highestScore = </span><span class="s3">0</span>
+<span class="s1">levelNum = </span><span class="s3">0</span>
+<span class="s1">difficulty = </span><span class="s3">0</span>
+
+<span class="s1">replay = </span><span class="s2">True</span>
+<span class="s1">pressed = </span><span class="s2">False</span>
+<span class="s1">climbDone = </span><span class="s2">False</span>
+<span class="s1">introDone = </span><span class="s2">False</span>
+<span class="s1">startDone = </span><span class="s2">False</span>
+<span class="s1">startOutput = </span><span class="s2">False</span>
+<span class="s1">gameStart = </span><span class="s2">False</span>
+<span class="s1">throwBarrel = </span><span class="s2">False</span>
+<span class="s1">jumpLeft = </span><span class="s2">False</span>
+<span class="s1">jumpRight = </span><span class="s2">False</span>
+<span class="s1">jumpStill = </span><span class="s2">False</span>
+<span class="s1">hit = </span><span class="s2">False</span>
+<span class="s1">deathScene = </span><span class="s2">False</span>
+<span class="s1">gameDone = </span><span class="s2">False</span>
+<span class="s1">winGame = </span><span class="s2">False</span>
+<span class="s1">winLevel = </span><span class="s2">False</span>
+<span class="s1">scoreWin = </span><span class="s2">False</span>
+<span class="s1">winGameSceneOutput = </span><span class="s2">False</span>
+<span class="s1">winGameSceneDone = </span><span class="s2">False</span>
+
+<span class="s1">option = </span><span class="s4">&quot;top&quot;</span>
+<span class="s1">direction = </span><span class="s4">&quot;right&quot;</span>
+
+<span class="s1">platformsX = [</span><span class="s3">55</span><span class="s2">, </span><span class="s3">55</span><span class="s2">, </span><span class="s3">51</span><span class="s2">, </span><span class="s3">60</span><span class="s2">, </span><span class="s3">56</span><span class="s2">, </span><span class="s3">56</span><span class="s2">, </span><span class="s3">56</span><span class="s1">]</span>
+<span class="s1">platformsY = [</span><span class="s3">9</span><span class="s2">, </span><span class="s3">10</span><span class="s2">, </span><span class="s3">8</span><span class="s2">, </span><span class="s3">9</span><span class="s2">, </span><span class="s3">11</span><span class="s2">, </span><span class="s3">9</span><span class="s2">, </span><span class="s3">9</span><span class="s2">, </span><span class="s3">11</span><span class="s1">]</span>
+<span class="s1">platNum = </span><span class="s3">0</span>
+
+<span class="s1">dkClimb = </span><span class="s3">0</span>
+<span class="s1">climbCount = </span><span class="s3">15</span>
+<span class="s1">platNum = </span><span class="s3">0</span>
+<span class="s1">dkJumpX = </span><span class="s3">378</span>
+<span class="s1">dkJumpY = </span><span class="s3">172</span>
+<span class="s1">dkJumpYNum = </span><span class="s3">0</span>
+
+<span class="s1">marioX = </span><span class="s3">150</span>
+<span class="s1">marioY = </span><span class="s3">720</span>
+<span class="s1">addJump = -</span><span class="s3">7</span>
+<span class="s1">jumpCount = </span><span class="s3">0</span>
+<span class="s1">jumpPoint = </span><span class="s3">0</span>
+<span class="s1">deathCount = </span><span class="s3">0</span>
+<span class="s1">lives = </span><span class="s3">2</span>
+
+<span class="s1">barrelX = []</span>
+<span class="s1">barrelY = []</span>
+<span class="s1">throwCountdown = </span><span class="s3">0</span>
+<span class="s1">barrelDirection = []</span>
+<span class="s1">fall = []</span>
+<span class="s1">fallCount = []</span>
+<span class="s1">barrelLeft = []</span>
+<span class="s1">barrelRight = []</span>
+
+<span class="s1">platInclineX = [</span><span class="s3">100</span><span class="s2">, </span><span class="s3">140</span><span class="s2">, </span><span class="s3">190</span><span class="s2">, </span><span class="s3">240</span><span class="s2">, </span><span class="s3">280</span><span class="s2">, </span><span class="s3">330</span><span class="s2">, </span><span class="s3">380</span><span class="s2">, </span><span class="s3">430</span><span class="s2">, </span><span class="s3">480</span><span class="s2">, </span><span class="s3">530</span><span class="s2">, </span><span class="s3">570</span><span class="s2">, </span><span class="s3">620</span><span class="s2">, </span><span class="s3">670</span><span class="s2">, </span><span class="s3">720</span><span class="s1">]</span>
+<span class="s1">inclineCount = </span><span class="s3">0</span>
+
+<span class="s1">ladderX1 = [</span><span class="s3">295</span><span class="s2">, </span><span class="s3">605</span><span class="s2">, </span><span class="s3">295</span><span class="s2">, </span><span class="s3">345</span><span class="s2">, </span><span class="s3">345</span><span class="s2">, </span><span class="s3">150</span><span class="s2">, </span><span class="s3">245</span><span class="s2">, </span><span class="s3">385</span><span class="s2">, </span><span class="s3">600</span><span class="s2">, </span><span class="s3">600</span><span class="s2">, </span><span class="s3">245</span><span class="s2">, </span><span class="s3">150</span><span class="s2">, </span><span class="s3">265</span><span class="s2">, </span><span class="s3">265</span><span class="s2">, </span><span class="s3">315</span><span class="s2">, </span><span class="s3">555</span><span class="s2">, </span><span class="s3">555</span><span class="s2">, </span><span class="s3">600</span><span class="s2">, </span><span class="s3">440</span><span class="s2">, </span><span class="s3">320</span><span class="s1">]</span>
+<span class="s1">ladderX2 = [</span><span class="s3">305</span><span class="s2">, </span><span class="s3">610</span><span class="s2">, </span><span class="s3">310</span><span class="s2">, </span><span class="s3">350</span><span class="s2">, </span><span class="s3">350</span><span class="s2">, </span><span class="s3">160</span><span class="s2">, </span><span class="s3">255</span><span class="s2">, </span><span class="s3">400</span><span class="s2">, </span><span class="s3">610</span><span class="s2">, </span><span class="s3">610</span><span class="s2">, </span><span class="s3">255</span><span class="s2">, </span><span class="s3">160</span><span class="s2">, </span><span class="s3">280</span><span class="s2">, </span><span class="s3">280</span><span class="s2">, </span><span class="s3">325</span><span class="s2">, </span><span class="s3">565</span><span class="s2">, </span><span class="s3">565</span><span class="s2">, </span><span class="s3">610</span><span class="s2">, </span><span class="s3">450</span><span class="s2">, </span><span class="s3">335</span><span class="s1">]</span>
+<span class="s1">ladderY1 = [</span><span class="s3">710</span><span class="s2">, </span><span class="s3">635</span><span class="s2">, </span><span class="s3">617</span><span class="s2">, </span><span class="s3">610</span><span class="s2">, </span><span class="s3">526</span><span class="s2">, </span><span class="s3">538</span><span class="s2">, </span><span class="s3">522</span><span class="s2">, </span><span class="s3">423</span><span class="s2">, </span><span class="s3">506</span><span class="s2">, </span><span class="s3">435</span><span class="s2">, </span><span class="s3">414</span><span class="s2">, </span><span class="s3">338</span><span class="s2">, </span><span class="s3">409</span><span class="s2">, </span><span class="s3">332</span><span class="s2">, </span><span class="s3">309</span><span class="s2">, </span><span class="s3">314</span><span class="s2">, </span><span class="s3">417</span><span class="s2">, </span><span class="s3">241</span><span class="s2">, </span><span class="s3">154</span><span class="s2">, </span><span class="s3">232</span><span class="s1">]</span>
+<span class="s1">ladderY2 = [</span><span class="s3">720</span><span class="s2">, </span><span class="s3">705</span><span class="s2">, </span><span class="s3">657</span><span class="s2">, </span><span class="s3">620</span><span class="s2">, </span><span class="s3">571</span><span class="s2">, </span><span class="s3">608</span><span class="s2">, </span><span class="s3">532</span><span class="s2">, </span><span class="s3">523</span><span class="s2">, </span><span class="s3">511</span><span class="s2">, </span><span class="s3">475</span><span class="s2">, </span><span class="s3">464</span><span class="s2">, </span><span class="s3">408</span><span class="s2">, </span><span class="s3">414</span><span class="s2">, </span><span class="s3">382</span><span class="s2">, </span><span class="s3">329</span><span class="s2">, </span><span class="s3">369</span><span class="s2">, </span><span class="s3">432</span><span class="s2">, </span><span class="s3">311</span><span class="s2">, </span><span class="s3">232</span><span class="s2">, </span><span class="s3">272</span><span class="s1">]</span>
+<span class="s1">fullLadderUp = [</span><span class="s2">False, True, True, False, True, True, False, True, False, True, True, True, False, True, False, True, False, True, True, True</span><span class="s1">]</span>
+<span class="s1">fullLadderDown = [</span><span class="s2">True, True, False, True, False, True, True, True, True, False, False, True, True, False, True, False, True, True, True, False</span><span class="s1">]</span>
+
+<span class="s1">leftBoundariesY = [</span><span class="s3">541</span><span class="s2">, </span><span class="s3">341</span><span class="s1">]</span>
+<span class="s1">rightBoundariesY = [</span><span class="s3">638</span><span class="s2">, </span><span class="s3">438</span><span class="s2">, </span><span class="s3">244</span><span class="s1">]</span>
+
+<span class="s1">barrelLadderX = [</span><span class="s3">320</span><span class="s2">, </span><span class="s3">610</span><span class="s2">, </span><span class="s3">560</span><span class="s2">, </span><span class="s3">280</span><span class="s2">, </span><span class="s3">160</span><span class="s2">, </span><span class="s3">250</span><span class="s2">, </span><span class="s3">400</span><span class="s2">, </span><span class="s3">610</span><span class="s2">, </span><span class="s3">350</span><span class="s2">, </span><span class="s3">160</span><span class="s2">, </span><span class="s3">300</span><span class="s2">, </span><span class="s3">610</span><span class="s1">]</span>
+<span class="s1">barrelLadderY1 = [</span><span class="s3">243</span><span class="s2">, </span><span class="s3">252</span><span class="s2">, </span><span class="s3">326</span><span class="s2">, </span><span class="s3">270</span><span class="s2">, </span><span class="s3">350</span><span class="s2">, </span><span class="s3">428</span><span class="s2">, </span><span class="s3">437</span><span class="s2">, </span><span class="s3">449</span><span class="s2">, </span><span class="s3">535</span><span class="s2">, </span><span class="s3">547</span><span class="s2">, </span><span class="s3">627</span><span class="s2">, </span><span class="s3">645</span><span class="s1">]</span>
+<span class="s1">barrelLadderY2 = [</span><span class="s3">343</span><span class="s2">, </span><span class="s3">322</span><span class="s2">, </span><span class="s3">446</span><span class="s2">, </span><span class="s3">344</span><span class="s2">, </span><span class="s3">420</span><span class="s2">, </span><span class="s3">538</span><span class="s2">, </span><span class="s3">527</span><span class="s2">, </span><span class="s3">519</span><span class="s2">, </span><span class="s3">625</span><span class="s2">, </span><span class="s3">617</span><span class="s2">, </span><span class="s3">727</span><span class="s2">, </span><span class="s3">715</span><span class="s1">]</span>
+<span class="s1">barrelAdjust = [-</span><span class="s3">2</span><span class="s2">, </span><span class="s3">1</span><span class="s2">, </span><span class="s1">-</span><span class="s3">1</span><span class="s2">, </span><span class="s3">4</span><span class="s2">, </span><span class="s3">2</span><span class="s2">, </span><span class="s3">3</span><span class="s2">, </span><span class="s3">5</span><span class="s2">, </span><span class="s3">1</span><span class="s2">, </span><span class="s3">5</span><span class="s2">, </span><span class="s3">1</span><span class="s2">, </span><span class="s3">4</span><span class="s2">, </span><span class="s3">1</span><span class="s1">]</span>
+
+<span class="s1">confettiX = []</span>
+<span class="s1">confettiY = []</span>
+<span class="s1">confettiRadius = []</span>
+<span class="s1">confettiSpeed = []</span>
+<span class="s1">confettiColour = []</span>
+
+<span class="s0">#Define Images</span>
+<span class="s1">title = pygame.image.load(</span><span class="s4">&quot;title-screen.png&quot;</span><span class="s1">)</span>
+<span class="s1">title = pygame.transform.scale(title</span><span class="s2">, </span><span class="s1">(</span><span class="s3">800</span><span class="s2">, </span><span class="s3">700</span><span class="s1">))</span>
+<span class="s1">start = pygame.image.load(</span><span class="s4">&quot;start.png&quot;</span><span class="s1">)</span>
+<span class="s1">winScreen = pygame.image.load(</span><span class="s4">&quot;win-screen.png&quot;</span><span class="s1">)</span>
+<span class="s1">gameOverScreen = pygame.image.load(</span><span class="s4">&quot;game-over-screen.png&quot;</span><span class="s1">)</span>
+
+<span class="s1">selectIcon = pygame.image.load(</span><span class="s4">&quot;select-icon.png&quot;</span><span class="s1">)</span>
+<span class="s1">life = pygame.image.load(</span><span class="s4">&quot;mario-life.png&quot;</span><span class="s1">)</span>
+
+<span class="s1">withLadder = pygame.image.load(</span><span class="s4">&quot;withLadder.png&quot;</span><span class="s1">)</span>
+<span class="s1">platform0 = pygame.image.load(</span><span class="s4">&quot;platform0.png&quot;</span><span class="s1">)</span>
+<span class="s1">platform1 = pygame.image.load(</span><span class="s4">&quot;platform1.png&quot;</span><span class="s1">)</span>
+<span class="s1">platform2 = pygame.image.load(</span><span class="s4">&quot;platform2.png&quot;</span><span class="s1">)</span>
+<span class="s1">platform3 = pygame.image.load(</span><span class="s4">&quot;platform3.png&quot;</span><span class="s1">)</span>
+<span class="s1">platform4 = pygame.image.load(</span><span class="s4">&quot;platform4.png&quot;</span><span class="s1">)</span>
+<span class="s1">platform5 = pygame.image.load(</span><span class="s4">&quot;platform5.png&quot;</span><span class="s1">)</span>
+<span class="s1">platform6 = pygame.image.load(</span><span class="s4">&quot;platform6.png&quot;</span><span class="s1">)</span>
+<span class="s1">platforms = [platform0</span><span class="s2">, </span><span class="s1">platform1</span><span class="s2">, </span><span class="s1">platform2</span><span class="s2">, </span><span class="s1">platform3</span><span class="s2">, </span><span class="s1">platform4</span><span class="s2">, </span><span class="s1">platform5</span><span class="s2">, </span><span class="s1">platform6]</span>
+<span class="s1">level = pygame.image.load(</span><span class="s4">&quot;level.png&quot;</span><span class="s1">)</span>
+
+<span class="s1">blue0 = pygame.image.load(</span><span class="s4">&quot;blue0.png&quot;</span><span class="s1">)</span>
+<span class="s1">blue1 = pygame.image.load(</span><span class="s4">&quot;blue1.png&quot;</span><span class="s1">)</span>
+<span class="s1">blue2 = pygame.image.load(</span><span class="s4">&quot;blue2.png&quot;</span><span class="s1">)</span>
+<span class="s1">blue3 = pygame.image.load(</span><span class="s4">&quot;blue3.png&quot;</span><span class="s1">)</span>
+<span class="s1">blue4 = pygame.image.load(</span><span class="s4">&quot;blue4.png&quot;</span><span class="s1">)</span>
+<span class="s1">blue5 = pygame.image.load(</span><span class="s4">&quot;blue5.png&quot;</span><span class="s1">)</span>
+<span class="s1">blueNumbers = [blue0</span><span class="s2">, </span><span class="s1">blue1</span><span class="s2">, </span><span class="s1">blue2</span><span class="s2">, </span><span class="s1">blue3</span><span class="s2">, </span><span class="s1">blue4</span><span class="s2">, </span><span class="s1">blue5]</span>
+<span class="s1">white0 = pygame.image.load(</span><span class="s4">&quot;white0.png&quot;</span><span class="s1">)</span>
+<span class="s1">white1 = pygame.image.load(</span><span class="s4">&quot;white1.png&quot;</span><span class="s1">)</span>
+<span class="s1">white2 = pygame.image.load(</span><span class="s4">&quot;white2.png&quot;</span><span class="s1">)</span>
+<span class="s1">white3 = pygame.image.load(</span><span class="s4">&quot;white3.png&quot;</span><span class="s1">)</span>
+<span class="s1">white4 = pygame.image.load(</span><span class="s4">&quot;white4.png&quot;</span><span class="s1">)</span>
+<span class="s1">white5 = pygame.image.load(</span><span class="s4">&quot;white5.png&quot;</span><span class="s1">)</span>
+<span class="s1">white6 = pygame.image.load(</span><span class="s4">&quot;white6.png&quot;</span><span class="s1">)</span>
+<span class="s1">white7 = pygame.image.load(</span><span class="s4">&quot;white7.png&quot;</span><span class="s1">)</span>
+<span class="s1">white8 = pygame.image.load(</span><span class="s4">&quot;white8.png&quot;</span><span class="s1">)</span>
+<span class="s1">white9 = pygame.image.load(</span><span class="s4">&quot;white9.png&quot;</span><span class="s1">)</span>
+<span class="s1">whiteNumbers = [white0</span><span class="s2">, </span><span class="s1">white1</span><span class="s2">, </span><span class="s1">white2</span><span class="s2">, </span><span class="s1">white3</span><span class="s2">, </span><span class="s1">white4</span><span class="s2">, </span><span class="s1">white5</span><span class="s2">, </span><span class="s1">white6</span><span class="s2">, </span><span class="s1">white7</span><span class="s2">, </span><span class="s1">white8</span><span class="s2">, </span><span class="s1">white9]</span>
+
+<span class="s1">marioLeft = pygame.image.load(</span><span class="s4">&quot;peixe-left.png&quot;</span><span class="s1">)</span>
+<span class="s1">marioRight = pygame.image.load(</span><span class="s4">&quot;peixe-right.png&quot;</span><span class="s1">)</span>
+<span class="s1">runLeft = pygame.image.load(</span><span class="s4">&quot;peixe-left.png&quot;</span><span class="s1">)</span>
+<span class="s1">runRight = pygame.image.load(</span><span class="s4">&quot;peixe-right.png&quot;</span><span class="s1">)</span>
+<span class="s1">marioJumpLeft = pygame.image.load(</span><span class="s4">&quot;peixe-left.png&quot;</span><span class="s1">)</span>
+<span class="s1">marioJumpRight = pygame.image.load(</span><span class="s4">&quot;peixe-right.png&quot;</span><span class="s1">)</span>
+<span class="s1">marioClimb1 = pygame.image.load(</span><span class="s4">&quot;peixeClimb1.png&quot;</span><span class="s1">)</span>
+<span class="s1">marioClimb2 = pygame.image.load(</span><span class="s4">&quot;peixeClimb2.png&quot;</span><span class="s1">)</span>
+<span class="s1">dead = pygame.image.load(</span><span class="s4">&quot;dead.png&quot;</span><span class="s1">)</span>
+<span class="s1">marioImage = marioRight</span>
+
+<span class="s1">paulineHelp = pygame.image.load(</span><span class="s4">&quot;pauline-help.png&quot;</span><span class="s1">)</span>
+<span class="s1">paulineStill = pygame.image.load(</span><span class="s4">&quot;pauline-still.png&quot;</span><span class="s1">)</span>
+
+<span class="s1">dkUp1 = pygame.image.load(</span><span class="s4">&quot;DK_up1.png&quot;</span><span class="s1">)</span>
+<span class="s1">dkUp2 = pygame.image.load(</span><span class="s4">&quot;DK_up2.png&quot;</span><span class="s1">)</span>
+<span class="s1">dkEmptyClimb1 = pygame.image.load(</span><span class="s4">&quot;dkClimbEmpty1.png&quot;</span><span class="s1">)</span>
+<span class="s1">dkEmptyClimb2 = pygame.image.load(</span><span class="s4">&quot;dkClimbEmpty2.png&quot;</span><span class="s1">)</span>
+<span class="s1">dkForward = pygame.image.load(</span><span class="s4">&quot;dkForward.png&quot;</span><span class="s1">)</span>
+<span class="s1">dkLeft = pygame.image.load(</span><span class="s4">&quot;dkLeft.png&quot;</span><span class="s1">)</span>
+<span class="s1">dkRight = pygame.image.load(</span><span class="s4">&quot;dkRight.png&quot;</span><span class="s1">)</span>
+<span class="s1">dkDefeat = pygame.image.load(</span><span class="s4">&quot;DK-defeat.png&quot;</span><span class="s1">)</span>
+<span class="s1">dkImage = dkForward</span>
+
+<span class="s1">barrelStack = pygame.image.load(</span><span class="s4">&quot;barrel-stack.png&quot;</span><span class="s1">)</span>
+<span class="s1">barrelDown = pygame.image.load(</span><span class="s4">&quot;barrel-down.png&quot;</span><span class="s1">)</span>
+<span class="s1">barrel1 = pygame.image.load(</span><span class="s4">&quot;barrel1.png&quot;</span><span class="s1">)</span>
+<span class="s1">barrel2 = pygame.image.load(</span><span class="s4">&quot;barrel2.png&quot;</span><span class="s1">)</span>
+<span class="s1">barrel3 = pygame.image.load(</span><span class="s4">&quot;barrel3.png&quot;</span><span class="s1">)</span>
+<span class="s1">barrel4 = pygame.image.load(</span><span class="s4">&quot;barrel4.png&quot;</span><span class="s1">)</span>
+<span class="s1">barrelSequence = [barrel1</span><span class="s2">, </span><span class="s1">barrel2</span><span class="s2">, </span><span class="s1">barrel3</span><span class="s2">, </span><span class="s1">barrel4]</span>
+<span class="s1">barrelPic = []</span>
+
+<span class="s1">brokenHeart = pygame.image.load(</span><span class="s4">&quot;broken-heart.png&quot;</span><span class="s1">)</span>
+<span class="s1">fullHeart = pygame.image.load(</span><span class="s4">&quot;full-heart.png&quot;</span><span class="s1">)</span>
+<span class="s1">clock = pygame.time.Clock()</span>
+<span class="s0">#declares values for 400 confetti pieces</span>
+<span class="s2">for </span><span class="s1">i </span><span class="s2">in </span><span class="s1">range(</span><span class="s3">0</span><span class="s2">, </span><span class="s3">400</span><span class="s1">):</span>
+    <span class="s0">#chooses random x value and appends it to list</span>
+    <span class="s1">x = random.randint(</span><span class="s3">0</span><span class="s2">, </span><span class="s3">800</span><span class="s1">)</span>
+    <span class="s1">confettiX.append(x)</span>
+    
+    <span class="s0">#chooses random y value and appends it to list</span>
+    <span class="s1">y = random.randint(-</span><span class="s3">500</span><span class="s2">, </span><span class="s1">-</span><span class="s3">100</span><span class="s1">)</span>
+    <span class="s1">confettiY.append(y)</span>
+    
+    <span class="s0">#chooses random radius and appends it to list</span>
+    <span class="s1">r = random.randint(</span><span class="s3">1</span><span class="s2">, </span><span class="s3">4</span><span class="s1">)</span>
+    <span class="s1">confettiRadius.append(r)</span>
+    
+    <span class="s0">#chooses random speed and appends it to list</span>
+    <span class="s1">s = random.randint(</span><span class="s3">5</span><span class="s2">, </span><span class="s3">20</span><span class="s1">)</span>
+    <span class="s1">confettiSpeed.append(s)</span>
+    
+    <span class="s0">#chooses random colour and appends it to list</span>
+    <span class="s1">colour = random.randint(</span><span class="s3">0</span><span class="s2">,</span><span class="s3">4</span><span class="s1">)</span>
+    <span class="s1">confettiColour.append(colours[colour])</span>
+
+
+<span class="s0"># instructions - outputs the instructions on the console</span>
+<span class="s0"># @param: none</span>
+<span class="s0"># @return: none</span>
+<span class="s2">def </span><span class="s1">instructions():</span>
+    <span class="s1">print (</span><span class="s4">&quot;Donkey Kong has kidnapped Pauline!&quot;</span><span class="s1">)</span>
+    <span class="s1">print (</span><span class="s4">&quot;You must now help Mario save her by climbing all the way&quot;</span><span class="s1">)</span>
+    <span class="s1">print (</span><span class="s4">&quot;up the structure to the platform where she is being held.&quot;</span><span class="s1">)</span>
+    <span class="s1">print (</span><span class="s4">&quot;You will have three lives, and you get points by rescuing&quot;</span><span class="s1">)</span>
+    <span class="s1">print (</span><span class="s4">&quot;Pauline and jumping over barrels.&quot;</span><span class="s1">)</span>
+    <span class="s1">print (</span><span class="s4">&quot;To win, save her 5 times or get a score of 999999 or over.&quot;</span><span class="s1">)</span>
+    <span class="s1">print (</span><span class="s4">&quot;Use the arrow keys to move, and press the space to jump.&quot;</span><span class="s1">)</span>
+    <span class="s1">print (</span><span class="s4">&quot;In the menus, use the up and down keys to choose your option&quot;</span><span class="s1">)</span>
+    <span class="s1">print (</span><span class="s4">&quot;and the return key to select it.&quot;</span><span class="s1">)</span>
+    <span class="s1">print (</span><span class="s4">&quot;GOOD LUCK!&quot;</span><span class="s1">)</span>
+
+
+
+<span class="s0"># getName - user inputs name</span>
+<span class="s0"># @param: none</span>
+<span class="s0"># @return: name(str)</span>
+<span class="s2">def </span><span class="s1">getName():</span>
+    
+    
+
+    <span class="s2">return </span><span class="s1">name</span>
+
+
+<span class="s0"># highScore - finds the high score and adds the current user's score to the leaderboard</span>
+<span class="s0"># @param: none</span>
+<span class="s0"># @return: highestScore (int)</span>
+<span class="s2">def </span><span class="s1">highScore():</span>
+    
+    <span class="s0">#adds user's score</span>
+    <span class="s1">leaderboard[</span><span class="s4">&quot;Player&quot;</span><span class="s1">] = score</span>
+    
+    <span class="s0">#sorting the scores from least to greatest</span>
+    <span class="s1">scores = leaderboard.values()</span>
+    
+
+
+<span class="s0"># outputLeaderboard - sorts the scores from greatest to least and ouputs it</span>
+<span class="s0"># @param: none</span>
+<span class="s0"># @return: none</span>
+<span class="s2">def </span><span class="s1">outputLeaderboard():</span>
+    
+    <span class="s0">#declaring variables</span>
+    <span class="s1">rank = </span><span class="s3">1</span>
+    <span class="s1">scores = leaderboard.values()</span>
+    <span class="s1">names = leaderboard.keys()</span>
+    <span class="s1">sortedNames = []</span>
+
+    
+    <span class="s0"># #goes through all the scores</span>
+    <span class="s0"># for i in range(0, len(scores)):</span>
+    <span class="s0">#     #goes through all the names</span>
+    <span class="s0">#     for j in range(0, len(names)):</span>
+            
+    <span class="s0">#         #checks if the name has already been sorted</span>
+    <span class="s0">#         if (names[j] in sortedNames) == False:</span>
+    <span class="s0">#             #if the score is the same as the score associated name in leaderboard, append it to the sorted names</span>
+    <span class="s0">#             if scores[i] == leaderboard[names[j]]:</span>
+    <span class="s0">#                 sortedNames.append(names[j])</span>
+    
+    <span class="s0"># print (&quot;LEADERBOARD&quot;)</span>
+    <span class="s0"># print (&quot;***********&quot;)</span>
+    
+    <span class="s0"># #goes through all the scores</span>
+    <span class="s0"># for i in range(len(leaderboard)-1, -1, -1):</span>
+        
+    <span class="s0">#     #if it is not the first time the loop is going and the score is different from the previous score, and 1 to the ranks</span>
+    <span class="s0">#     if i &lt; len(leaderboard)-1:</span>
+    <span class="s0">#         if scores[i] != scores[i+1]:</span>
+    <span class="s0">#             rank = rank + 1</span>
+        
+    <span class="s0">#     #output</span>
+    <span class="s0">#     print (rank, &quot;|&quot;, sortedNames[i], &quot;:&quot;, scores[i])</span>
+
+    <span class="s0"># print (&quot;THANKS FOR PLAYING! :)&quot;)</span>
+
+
+
+<span class="s0"># collide - checks whether or not mario has collided into a barrel</span>
+<span class="s0"># @param: none</span>
+<span class="s0"># @return: hit(boolean)</span>
+<span class="s2">def </span><span class="s1">collide() -&gt; bool:</span>
+    <span class="s2">global </span><span class="s1">hit</span>
+    
+    <span class="s0">#goes through all the barrels</span>
+    <span class="s2">for </span><span class="s1">i </span><span class="s2">in </span><span class="s1">range(</span><span class="s3">0</span><span class="s2">, </span><span class="s1">len(barrelX)):</span>
+        <span class="s0">#if mario's image touches the barrels image anywhere, hit is True</span>
+        <span class="s2">if </span><span class="s1">marioX+</span><span class="s3">20 </span><span class="s1">&gt;= barrelX[i] </span><span class="s2">and </span><span class="s1">marioX &lt;= barrelX[i]+</span><span class="s3">26 </span><span class="s2">and </span><span class="s1">marioY+</span><span class="s3">30 </span><span class="s1">&gt;= barrelY[i] </span><span class="s2">and </span><span class="s1">marioY &lt;= barrelY[i]+</span><span class="s3">20</span><span class="s1">:</span>
+            <span class="s1">hit = </span><span class="s2">True</span>
+            
+    <span class="s2">return </span><span class="s1">hit</span>
+
+
+<span class="s0"># ladderCheck - checks whether or not there is a ladder at mario's location</span>
+<span class="s0"># @param: none</span>
+<span class="s0"># @return: upLadder(boolean), downLadder(boolean), moveSides(boolean)</span>
+<span class="s2">def </span><span class="s1">ladderCheck():</span>
+    <span class="s2">global </span><span class="s1">marioY</span>
+    
+    <span class="s0">#declares variables</span>
+    <span class="s1">upLadder = </span><span class="s2">False</span>
+    <span class="s1">downLadder = </span><span class="s2">False</span>
+    <span class="s1">moveSides = </span><span class="s2">True</span>
+    
+    <span class="s0">#goes through all the ladders</span>
+    <span class="s2">for </span><span class="s1">i </span><span class="s2">in </span><span class="s1">range(</span><span class="s3">0</span><span class="s2">, </span><span class="s1">len(ladderX1)):</span>
+        <span class="s0"># if mario is in range of a ladder, he can move up, down, and to the sides</span>
+        <span class="s2">if </span><span class="s1">marioX &gt;= ladderX1[i] </span><span class="s2">and </span><span class="s1">marioX &lt;= ladderX2[i] </span><span class="s2">and </span><span class="s1">marioY &gt;= ladderY1[i] </span><span class="s2">and </span><span class="s1">marioY &lt;= ladderY2[i]:</span>
+            <span class="s1">downLadder = </span><span class="s2">True</span>
+            <span class="s1">upLadder = </span><span class="s2">True</span>
+            <span class="s1">moveSides = </span><span class="s2">False</span>
+            
+            <span class="s0">#if mario is at the top of a ladder, he can't move up further</span>
+            <span class="s2">if </span><span class="s1">marioY == ladderY1[i]:</span>
+                <span class="s1">upLadder = </span><span class="s2">False</span>
+                
+                <span class="s0">#if the ladder isn't broken going up, he can move to the sides when at the top</span>
+                <span class="s2">if </span><span class="s1">fullLadderUp[i]:</span>
+                    <span class="s1">moveSides = </span><span class="s2">True      </span>
+            
+            <span class="s0">#if mario is at the bottom of the ladder, he can't move down further </span>
+            <span class="s2">if </span><span class="s1">marioY == ladderY2[i]:</span>
+                <span class="s1">downLadder = </span><span class="s2">False</span>
+                
+                <span class="s0">#if the ladder isn't broken going down, he can move to the sides when at the bottom </span>
+                <span class="s2">if </span><span class="s1">fullLadderDown[i]:</span>
+                    <span class="s1">moveSides = </span><span class="s2">True</span>
+        
+        <span class="s0">#break out of the loop to stop checking for which ladder mario because the computer has already found it</span>
+        <span class="s2">if </span><span class="s1">upLadder </span><span class="s2">or </span><span class="s1">downLadder:</span>
+            <span class="s2">break</span>
+            
+    <span class="s2">return </span><span class="s1">upLadder</span><span class="s2">, </span><span class="s1">downLadder</span><span class="s2">, </span><span class="s1">moveSides</span>
+
+
+<span class="s0"># incline - moves Mario up so that he can go on an incline when walking/jumping on the platform</span>
+<span class="s0"># @param: y(int), x(int), direction(str), objectt(str)</span>
+<span class="s0"># @return: y(int) or move(int)</span>
+<span class="s2">def </span><span class="s1">incline(y</span><span class="s2">, </span><span class="s1">x</span><span class="s2">, </span><span class="s1">direction</span><span class="s2">, </span><span class="s1">objectt):</span>
+    <span class="s2">global </span><span class="s1">inclineCount</span>
+    
+    <span class="s0">#lines 344 to 371 checks which platform the object is on and then declares the range where the object inclines and how much it moves vertically when going right on a inclined part</span>
+    
+    <span class="s0">#if the object is on the bottom platform</span>
+    <span class="s2">if </span><span class="s1">y &lt;= </span><span class="s3">720 </span><span class="s2">and </span><span class="s1">y &gt;= </span><span class="s3">657</span><span class="s1">:</span>
+        <span class="s1">startNum = </span><span class="s3">6</span>
+        <span class="s1">endNum = len(platInclineX) - </span><span class="s3">1</span>
+        <span class="s1">move = </span><span class="s3">3</span>
+        
+    <span class="s0">#if object is on the second or fourth platform </span>
+    <span class="s2">elif </span><span class="s1">(y &lt;= </span><span class="s3">638 </span><span class="s2">and </span><span class="s1">y &gt;= </span><span class="s3">553</span><span class="s1">) </span><span class="s2">or </span><span class="s1">(y &gt;= </span><span class="s3">353 </span><span class="s2">and </span><span class="s1">y &lt;= </span><span class="s3">438</span><span class="s1">):</span>
+        <span class="s1">startNum = </span><span class="s3">0</span>
+        <span class="s1">endNum = len(platInclineX) - </span><span class="s3">2</span>
+        <span class="s1">move = -</span><span class="s3">3</span>
+        
+    <span class="s0">#if object is on the thrid or fifth platform</span>
+    <span class="s2">elif </span><span class="s1">(y &lt;= </span><span class="s3">541 </span><span class="s2">and </span><span class="s1">y &gt;= </span><span class="s3">456</span><span class="s1">) </span><span class="s2">or </span><span class="s1">(y &lt;= </span><span class="s3">341 </span><span class="s2">and </span><span class="s1">y &gt;= </span><span class="s3">256</span><span class="s1">):</span>
+        <span class="s1">startNum = </span><span class="s3">1</span>
+        <span class="s1">endNum = len(platInclineX) - </span><span class="s3">1</span>
+        <span class="s1">move = </span><span class="s3">3</span>
+        
+    <span class="s0">#if object is on the top platform</span>
+    <span class="s2">elif </span><span class="s1">y &lt;= </span><span class="s3">245 </span><span class="s2">and </span><span class="s1">y &gt;= </span><span class="s3">149</span><span class="s1">:</span>
+        <span class="s1">startNum = </span><span class="s3">8</span>
+        <span class="s1">endNum = len(platInclineX) - </span><span class="s3">2</span>
+        <span class="s1">move = -</span><span class="s3">3</span>
+    
+    <span class="s0">#if not on a platform (on a ladder)</span>
+    <span class="s2">else</span><span class="s1">:</span>
+        <span class="s1">startNum = </span><span class="s3">0</span>
+        <span class="s1">endNum = </span><span class="s3">0</span>
+        <span class="s1">move = </span><span class="s3">0</span>
+    
+    <span class="s0">#goes through the platIncline list, with a range of different numbers depending on which platform the object is on</span>
+    <span class="s2">for </span><span class="s1">i </span><span class="s2">in </span><span class="s1">range(startNum</span><span class="s2">, </span><span class="s1">endNum):</span>
+        
+        <span class="s0">#if the object has the same x as one of the x incline spot, the object will incline up or down</span>
+        <span class="s2">if </span><span class="s1">x == platInclineX[i]:</span>
+            
+            <span class="s0">#if the object is mario and he is jumping left or right, keep track of how many inclines he has passed while jumping</span>
+            <span class="s2">if </span><span class="s1">(jumpLeft </span><span class="s2">or </span><span class="s1">jumpRight) </span><span class="s2">and </span><span class="s1">objectt == </span><span class="s4">&quot;mario&quot;</span><span class="s1">:</span>
+                <span class="s1">inclineCount = inclineCount + </span><span class="s3">1    </span>
+            
+            <span class="s0">#else find out which direction he is moving</span>
+            <span class="s2">else</span><span class="s1">:</span>
+                <span class="s0">#if it's right, minus move from y</span>
+                <span class="s2">if </span><span class="s1">direction == </span><span class="s4">&quot;right&quot;</span><span class="s1">:</span>
+                    <span class="s1">y = y - move</span>
+                <span class="s0">#if its left, add move to y                  </span>
+                <span class="s2">elif </span><span class="s1">direction == </span><span class="s4">&quot;left&quot;</span><span class="s1">:</span>
+                    <span class="s1">y = y + move</span>
+    
+    <span class="s0">#returns move if the function is for mario when jumping</span>
+    <span class="s2">if </span><span class="s1">(jumpLeft </span><span class="s2">or </span><span class="s1">jumpRight) </span><span class="s2">and </span><span class="s1">objectt == </span><span class="s4">&quot;mario&quot;</span><span class="s1">:</span>
+        <span class="s2">return </span><span class="s1">move</span>
+    <span class="s0">#else return the new y value</span>
+    <span class="s2">else</span><span class="s1">:</span>
+        <span class="s2">return </span><span class="s1">y</span>
+
+
+<span class="s0"># boundaries - checks all of Mario's, the barrels boundaries</span>
+<span class="s0"># @param: none</span>
+<span class="s0"># @return: left(boolean), right(boolean)</span>
+<span class="s2">def </span><span class="s1">boundaries(x</span><span class="s2">, </span><span class="s1">y):</span>
+    <span class="s0">#declare variables</span>
+    <span class="s1">left = </span><span class="s2">True</span>
+    <span class="s1">right = </span><span class="s2">True</span>
+    
+    <span class="s0">#if x is in that range, mario has reached a possible boundary to the left of him</span>
+    <span class="s2">if </span><span class="s1">x &lt;= </span><span class="s3">105 </span><span class="s2">and </span><span class="s1">x &gt;= </span><span class="s3">96</span><span class="s1">:</span>
+        <span class="s0">#goes through the y coordinate of the left boundaries</span>
+        <span class="s2">for </span><span class="s1">i </span><span class="s2">in </span><span class="s1">range(</span><span class="s3">0</span><span class="s2">, </span><span class="s1">len(leftBoundariesY)):</span>
+            
+            <span class="s0">#if mario is in that range of the y boundary too, left is False and mario can't move left</span>
+            <span class="s2">if </span><span class="s1">y &lt;= leftBoundariesY[i] </span><span class="s2">and </span><span class="s1">y &gt;= leftBoundariesY[i] - </span><span class="s3">49</span><span class="s1">:</span>
+                <span class="s1">left = </span><span class="s2">False</span>
+                
+    <span class="s0">#if x is in that range, mario has reached a possible boundary to the right of him            </span>
+    <span class="s2">elif </span><span class="s1">x &gt;= </span><span class="s3">660 </span><span class="s2">and </span><span class="s1">x &lt;= </span><span class="s3">669</span><span class="s1">:</span>
+        <span class="s0">#goes through the y coordinate of the right boundaries</span>
+        <span class="s2">for </span><span class="s1">i </span><span class="s2">in </span><span class="s1">range(</span><span class="s3">0</span><span class="s2">, </span><span class="s1">len(rightBoundariesY)):</span>
+            
+            <span class="s0">#if mario is in that range of the y boundary too, right is False and mario can't move right</span>
+            <span class="s2">if </span><span class="s1">y &lt;= rightBoundariesY[i] </span><span class="s2">and </span><span class="s1">y &gt;= rightBoundariesY[i] - </span><span class="s3">49</span><span class="s1">:</span>
+                <span class="s1">right = </span><span class="s2">False</span>
+                     
+    <span class="s2">return </span><span class="s1">left</span><span class="s2">, </span><span class="s1">right</span>
+
+
+<span class="s0"># introScene - the start scene of the game</span>
+<span class="s0"># @param: none</span>
+<span class="s0"># @return: none</span>
+<span class="s2">def </span><span class="s1">introScene():</span>
+        <span class="s0">#if DK has climbed less than 390 pixels, blit the background with the ladder</span>
+        <span class="s2">if </span><span class="s1">dkClimb &lt;= </span><span class="s3">390</span><span class="s1">:</span>
+            <span class="s1">screen.blit(withLadder</span><span class="s2">, </span><span class="s1">(</span><span class="s3">48</span><span class="s2">, </span><span class="s3">0</span><span class="s1">))</span>
+            
+            <span class="s0">#images will switch to make it look like DK is moving</span>
+            <span class="s0">#if dkClimb is divisble by 30, blit the first climb image</span>
+            <span class="s2">if </span><span class="s1">dkClimb % </span><span class="s3">30 </span><span class="s1">== </span><span class="s3">0</span><span class="s1">:</span>
+                <span class="s1">screen.blit(dkUp2</span><span class="s2">, </span><span class="s1">(</span><span class="s3">350</span><span class="s2">, </span><span class="s3">660</span><span class="s1">-dkClimb))</span>
+                
+            <span class="s0">#else blit the other climb image</span>
+            <span class="s2">else</span><span class="s1">:  </span>
+                <span class="s1">screen.blit(dkUp1</span><span class="s2">, </span><span class="s1">(</span><span class="s3">370</span><span class="s2">, </span><span class="s3">660</span><span class="s1">-dkClimb))</span>
+        
+        <span class="s0">#if DK has climbed for between 390 and 580 pixels, blit platform0 and keep dk's image as dkUp2    </span>
+        <span class="s2">elif </span><span class="s1">dkClimb &gt; </span><span class="s3">390 </span><span class="s2">and </span><span class="s1">dkClimb &lt;= </span><span class="s3">580</span><span class="s1">:</span>
+            <span class="s1">screen.blit(platform0</span><span class="s2">, </span><span class="s1">(</span><span class="s3">55</span><span class="s2">, </span><span class="s3">9</span><span class="s1">))</span>
+            <span class="s1">screen.blit(dkUp2</span><span class="s2">, </span><span class="s1">(</span><span class="s3">350</span><span class="s2">, </span><span class="s3">660</span><span class="s1">-dkClimb))</span>
+        
+        <span class="s0">#if DK is done climbing, blit the falling platforms beams, Pauline and DK jumping</span>
+        <span class="s2">if </span><span class="s1">climbDone:</span>
+            <span class="s1">screen.blit(platforms[platNum]</span><span class="s2">, </span><span class="s1">(platformsX[platNum]</span><span class="s2">, </span><span class="s1">platformsY[platNum]))</span>
+            <span class="s1">pauline(paulineStill)</span>
+            <span class="s1">screen.blit(dkForward</span><span class="s2">, </span><span class="s1">(dkJumpX</span><span class="s2">, </span><span class="s1">dkJumpY))</span>
+
+
+<span class="s0"># startScreen - outputs the start screen</span>
+<span class="s0"># @param: none</span>
+<span class="s0"># @return: none</span>
+<span class="s2">def </span><span class="s1">startScreen():</span>
+    <span class="s0">#blit image</span>
+    <span class="s1">screen.blit(start</span><span class="s2">, </span><span class="s1">(</span><span class="s3">48</span><span class="s2">, </span><span class="s3">0</span><span class="s1">))</span>
+
+
+<span class="s0"># backgroud - outputs the level and barrel stack</span>
+<span class="s0"># @param: none</span>
+<span class="s0"># @return: none</span>
+<span class="s2">def </span><span class="s1">background():</span>
+    <span class="s0">#blit images</span>
+    <span class="s1">screen.blit(level</span><span class="s2">, </span><span class="s1">(</span><span class="s3">31</span><span class="s2">, </span><span class="s1">-</span><span class="s3">14</span><span class="s1">))</span>
+    <span class="s1">screen.blit(barrelStack</span><span class="s2">, </span><span class="s1">(</span><span class="s3">60</span><span class="s2">, </span><span class="s3">188</span><span class="s1">))</span>
+
+
+<span class="s0"># dk - outputs DK onto screen</span>
+<span class="s0"># @param: none</span>
+<span class="s0"># @return: none</span>
+<span class="s2">def </span><span class="s1">dk():</span>
+    <span class="s0">#blit image</span>
+    <span class="s1">screen.blit(dkImage</span><span class="s2">, </span><span class="s1">(</span><span class="s3">130</span><span class="s2">, </span><span class="s3">176</span><span class="s1">))</span>
+
+
+<span class="s0"># mario - outputs Mario onto screen</span>
+<span class="s0"># @param: none</span>
+<span class="s0"># @return: none</span>
+<span class="s2">def </span><span class="s1">mario():</span>
+    <span class="s0">#blit image</span>
+    <span class="s1">screen.blit(marioImage</span><span class="s2">, </span><span class="s1">(marioX</span><span class="s2">, </span><span class="s1">marioY))</span>
+ 
+ 
+<span class="s0"># pauline - outputs pauline on to screen</span>
+<span class="s0"># @param: paulinePic(image)</span>
+<span class="s0"># @return: none</span>
+<span class="s2">def </span><span class="s1">pauline(paulinePic):</span>
+    <span class="s0">#blit image</span>
+    <span class="s1">screen.blit(paulinePic</span><span class="s2">, </span><span class="s1">(</span><span class="s3">335</span><span class="s2">, </span><span class="s3">133</span><span class="s1">))</span>
+
+
+<span class="s0">#barrels - blit all the barrels onto the screen</span>
+<span class="s0"># @param: none</span>
+<span class="s0"># @return: none</span>
+<span class="s2">def </span><span class="s1">barrel():</span>
+    <span class="s0">#goes through all the barrels to find each barrel information so it can blit it</span>
+    <span class="s2">for </span><span class="s1">i </span><span class="s2">in </span><span class="s1">range(</span><span class="s3">0</span><span class="s2">, </span><span class="s1">len(barrelPic)):</span>
+        <span class="s1">screen.blit(barrelPic[i]</span><span class="s2">, </span><span class="s1">(barrelX[i]</span><span class="s2">,</span><span class="s1">barrelY[i]))</span>
+
+
+<span class="s0"># lives - blit visual representation of how many lives Mario has left</span>
+<span class="s0"># @param: none</span>
+<span class="s0"># @return: none</span>
+<span class="s2">def </span><span class="s1">marioLives():</span>
+    <span class="s0">#goes through all the lives you have left</span>
+    <span class="s2">for </span><span class="s1">i </span><span class="s2">in </span><span class="s1">range(</span><span class="s3">0</span><span class="s2">, </span><span class="s1">lives):</span>
+        <span class="s0">#blit images, adding 20 to the y each time you run the loop</span>
+        <span class="s1">screen.blit(life</span><span class="s2">, </span><span class="s1">(</span><span class="s3">60</span><span class="s1">+i*</span><span class="s3">20</span><span class="s2">, </span><span class="s3">100</span><span class="s1">))</span>
+
+
+<span class="s0"># levelNumber - blit the level number</span>
+<span class="s0"># @param: none</span>
+<span class="s0"># @return: none</span>
+<span class="s2">def </span><span class="s1">levelNumber():</span>
+    <span class="s0">#goes through all the blue numbers</span>
+    <span class="s2">for </span><span class="s1">i </span><span class="s2">in </span><span class="s1">range(</span><span class="s3">0</span><span class="s2">, </span><span class="s1">len(blueNumbers)):</span>
+        <span class="s0">#if the ten's digit is equal to i, blit the image for the number</span>
+        <span class="s2">if </span><span class="s1">levelNum / </span><span class="s3">10 </span><span class="s1">== i:</span>
+            <span class="s1">screen.blit(blueNumbers[i]</span><span class="s2">, </span><span class="s1">(</span><span class="s3">611</span><span class="s2">, </span><span class="s3">86</span><span class="s1">))</span>
+        <span class="s0">#if the ones's digit is equal to i, blit the image for the number</span>
+        <span class="s2">if </span><span class="s1">levelNum % </span><span class="s3">10 </span><span class="s1">== i:</span>
+            <span class="s1">screen.blit(blueNumbers[i]</span><span class="s2">, </span><span class="s1">(</span><span class="s3">635</span><span class="s2">, </span><span class="s3">86</span><span class="s1">))</span>
+
+
+<span class="s0"># playersScores - blit the scores</span>
+<span class="s0"># @param: scoreType(int), scoreX(int), scoreY(int)</span>
+<span class="s0"># @return: none</span>
+<span class="s2">def </span><span class="s1">playersScores(scoreType</span><span class="s2">, </span><span class="s1">scoreX</span><span class="s2">, </span><span class="s1">scoreY):</span>
+    
+    <span class="s0">#declares variables</span>
+    <span class="s1">tempScore = str(scoreType)</span>
+    <span class="s1">numOfZero = </span><span class="s3">6</span><span class="s1">-len(tempScore)</span>
+    
+    <span class="s0">#goes through to blit all the zeros needed in front of the score</span>
+    <span class="s2">for </span><span class="s1">i </span><span class="s2">in </span><span class="s1">range(</span><span class="s3">0</span><span class="s2">, </span><span class="s1">numOfZero):</span>
+        <span class="s1">screen.blit(whiteNumbers[</span><span class="s3">0</span><span class="s1">]</span><span class="s2">, </span><span class="s1">(scoreX</span><span class="s2">, </span><span class="s1">scoreY))</span>
+        
+        <span class="s0">#add 24 to space the number out each time</span>
+        <span class="s1">scoreX = scoreX + </span><span class="s3">24</span>
+    
+    <span class="s0">#goes through each digit/number in the string</span>
+    <span class="s0"># for i in range(0, len(tempScore)):</span>
+    <span class="s0">#     #goes through the numbers 0 to 10</span>
+    <span class="s0">#     for j in range(0, 10):</span>
+            
+    <span class="s0">#         #change tempScore[i] to integer to compare it with j</span>
+    <span class="s0">#         #if they are equal, output the coressponding number image</span>
+    <span class="s0">#         if int(tempScore[i]) == j:</span>
+    <span class="s0">#             screen.blit(whiteNumbers[j], (scoreX, scoreY))</span>
+                
+    <span class="s0">#             #add 24 to space the number out each time</span>
+    <span class="s0">#             scoreX = scoreX + 24</span>
+
+
+<span class="s0"># win - images outputed when you complete a level</span>
+<span class="s0"># @param: none</span>
+<span class="s0"># @return: none</span>
+<span class="s2">def </span><span class="s1">win():</span>
+    
+    <span class="s0">#blit images</span>
+    <span class="s1">background()</span>
+    <span class="s1">screen.blit(marioLeft</span><span class="s2">, </span><span class="s1">(</span><span class="s3">440</span><span class="s2">, </span><span class="s3">150</span><span class="s1">))</span>
+    
+    <span class="s0">#if DK has climbed less than 30 pixels, blit Pauline with a full heart</span>
+    <span class="s2">if </span><span class="s1">dkClimb &lt;= </span><span class="s3">30</span><span class="s1">:</span>
+        <span class="s1">pauline(paulineStill)</span>
+        <span class="s1">screen.blit(fullHeart</span><span class="s2">, </span><span class="s1">(</span><span class="s3">386</span><span class="s2">, </span><span class="s3">130</span><span class="s1">))</span>
+    <span class="s0">#else just blit a broken heart</span>
+    <span class="s2">else</span><span class="s1">:</span>
+        <span class="s1">screen.blit(brokenHeart</span><span class="s2">, </span><span class="s1">(</span><span class="s3">387</span><span class="s2">, </span><span class="s3">130</span><span class="s1">))</span>
+    
+    <span class="s0">#if the game is not won, switch between two images to blit</span>
+    <span class="s2">if </span><span class="s1">winGame == </span><span class="s2">False</span><span class="s1">:</span>
+        <span class="s2">if </span><span class="s1">dkClimb % </span><span class="s3">30 </span><span class="s1">== </span><span class="s3">0</span><span class="s1">:</span>
+            <span class="s1">screen.blit(dkImage1</span><span class="s2">, </span><span class="s1">(</span><span class="s3">240 </span><span class="s1">- moveOver1</span><span class="s2">, </span><span class="s3">160</span><span class="s1">-dkClimb))</span>
+        <span class="s2">else</span><span class="s1">:  </span>
+            <span class="s1">screen.blit(dkImage2</span><span class="s2">, </span><span class="s1">(</span><span class="s3">240 </span><span class="s1">- moveOver2</span><span class="s2">, </span><span class="s3">160</span><span class="s1">-dkClimb))</span>
+            
+    <span class="s0">#else just blit DK        </span>
+    <span class="s2">else</span><span class="s1">:</span>
+        <span class="s1">dk()</span>
+
+
+<span class="s0"># end - shows end of the game</span>
+<span class="s0"># @param: endScreen(image)</span>
+<span class="s0"># @return: none</span>
+<span class="s2">def </span><span class="s1">end(endScreen):</span>
+    
+    <span class="s0">#blit image</span>
+    <span class="s1">screen.blit(endScreen</span><span class="s2">, </span><span class="s1">(</span><span class="s3">0</span><span class="s2">, </span><span class="s3">30</span><span class="s1">))</span>
+    
+    <span class="s0">#if the bottom option is selected, blit the icon next to the bottom option</span>
+    <span class="s2">if </span><span class="s1">option == </span><span class="s4">&quot;bottom&quot;</span><span class="s1">:    </span>
+        <span class="s1">screen.blit(selectIcon</span><span class="s2">, </span><span class="s1">(</span><span class="s3">270</span><span class="s2">, </span><span class="s3">640</span><span class="s1">))</span>
+    
+    <span class="s0">#else blit it next to the top option</span>
+    <span class="s2">else</span><span class="s1">:</span>
+        <span class="s1">screen.blit(selectIcon</span><span class="s2">, </span><span class="s1">(</span><span class="s3">270</span><span class="s2">, </span><span class="s3">575</span><span class="s1">))</span>
+ 
+
+<span class="s0"># confetti - outputs confetti on the screen</span>
+<span class="s0"># @param: none</span>
+<span class="s0"># @return: none</span>
+<span class="s2">def </span><span class="s1">confetti():</span>
+    
+    <span class="s0">#goes through all 400 confetti pieces</span>
+    <span class="s2">for </span><span class="s1">i </span><span class="s2">in </span><span class="s1">range(</span><span class="s3">0</span><span class="s2">, </span><span class="s3">400</span><span class="s1">):</span>
+        <span class="s0">#blit image with the correct confetti info for each piece</span>
+        <span class="s1">pygame.draw.circle(screen</span><span class="s2">, </span><span class="s1">confettiColour[i]</span><span class="s2">, </span><span class="s1">(confettiX[i]</span><span class="s2">, </span><span class="s1">confettiY[i])</span><span class="s2">, </span><span class="s1">confettiRadius[i]</span><span class="s2">, </span><span class="s3">0</span><span class="s1">) </span>
+
+
+        
+<span class="s0"># @redraw_screen - function that redraws the screen</span>
+<span class="s2">def </span><span class="s1">redraw_screen():</span>
+    
+    <span class="s0">#find global variables</span>
+    <span class="s2">global </span><span class="s1">climbDone</span>
+    <span class="s2">global </span><span class="s1">gameStart</span>
+    <span class="s2">global </span><span class="s1">gameDone</span>
+    <span class="s2">global </span><span class="s1">winGameSceneDone</span>
+    <span class="s2">global </span><span class="s1">startDone</span>
+    <span class="s2">global </span><span class="s1">startOutput</span>
+    
+    <span class="s0">#filling colour of screen</span>
+    <span class="s1">screen.fill(BLACK)</span>
+    
+    <span class="s0">#drawing commands</span>
+
+    <span class="s0">#if game is done, output end screen and user and high score</span>
+    <span class="s2">if </span><span class="s1">gameDone:</span>
+        <span class="s0">#calls drawing fucntions</span>
+        <span class="s1">end(gameOverScreen)</span>
+        <span class="s1">playersScores(score</span><span class="s2">, </span><span class="s3">388</span><span class="s2">, </span><span class="s3">387</span><span class="s1">)</span>
+        <span class="s1">playersScores(highestScore</span><span class="s2">, </span><span class="s3">485</span><span class="s2">, </span><span class="s3">445</span><span class="s1">)</span>
+    
+    <span class="s0">#if winGame is True, go to the win game sequences</span>
+    <span class="s2">elif </span><span class="s1">winGame:</span>
+        <span class="s0">#if this is true, blit the images to show the moment DK is defeated</span>
+        <span class="s2">if </span><span class="s1">winGameSceneOutput:</span>
+            <span class="s0">#calls drawing fucntions</span>
+            <span class="s1">win()</span>
+            <span class="s1">marioLives()</span>
+                
+            <span class="s1">levelNumber()</span>
+            <span class="s1">playersScores(score</span><span class="s2">, </span><span class="s3">88</span><span class="s2">, </span><span class="s3">40</span><span class="s1">)</span>
+            <span class="s1">playersScores(highestScore</span><span class="s2">, </span><span class="s3">327</span><span class="s2">, </span><span class="s3">40</span><span class="s1">)</span>
+        
+        <span class="s0">#if this is true, output the win game menu with confetti</span>
+        <span class="s2">elif </span><span class="s1">winGameSceneDone:</span>
+            <span class="s0">#calls drawing fucntions</span>
+            <span class="s1">end(winScreen)</span>
+            <span class="s1">confetti()</span>
+            <span class="s1">playersScores(score</span><span class="s2">, </span><span class="s3">388</span><span class="s2">, </span><span class="s3">387</span><span class="s1">)</span>
+            <span class="s1">playersScores(highestScore</span><span class="s2">, </span><span class="s3">485</span><span class="s2">, </span><span class="s3">445</span><span class="s1">)</span>
+    
+    <span class="s0">#else the user has not won or lost the game yet</span>
+    <span class="s2">else</span><span class="s1">:</span>
+        <span class="s0">#if pressed is false, the title screen is being blited</span>
+        <span class="s2">if </span><span class="s1">pressed == </span><span class="s2">False</span><span class="s1">:</span>
+            <span class="s1">screen.blit(title</span><span class="s2">, </span><span class="s1">(</span><span class="s3">54</span><span class="s2">, </span><span class="s3">18</span><span class="s1">))</span>
+        
+        <span class="s0">#if pressed is true and introDone, blit the intro sequence</span>
+        <span class="s2">elif </span><span class="s1">pressed </span><span class="s2">and </span><span class="s1">introDone == </span><span class="s2">False</span><span class="s1">:</span>
+            <span class="s0">#calls drawing fucntions</span>
+            <span class="s1">introScene()</span>
+            <span class="s1">marioLives()</span>
+        
+        <span class="s0">#if intro is done and the game hasn't started yet, blit the start screen</span>
+        <span class="s2">elif </span><span class="s1">introDone == </span><span class="s2">True and </span><span class="s1">gameStart == </span><span class="s2">False</span><span class="s1">:</span>
+            <span class="s0">#calls drawing fucntions</span>
+            <span class="s1">startScreen()</span>
+            <span class="s1">marioLives()</span>
+            
+            <span class="s0">#establishing the start is done by resetting the variables</span>
+            <span class="s1">startOutput = </span><span class="s2">True</span>
+            <span class="s1">startDone = </span><span class="s2">True</span>
+        
+        <span class="s0">#if the game has started and the level is not won or mario has died, blit the normal game play images</span>
+        <span class="s2">elif </span><span class="s1">(gameStart </span><span class="s2">and </span><span class="s1">winLevel == </span><span class="s2">False</span><span class="s1">) </span><span class="s2">or </span><span class="s1">deathScene:</span>
+            <span class="s0">#calls drawing fucntions</span>
+            <span class="s1">background()</span>
+            <span class="s1">dk()</span>
+            <span class="s1">mario()</span>
+            <span class="s1">pauline(paulineHelp)</span>
+            <span class="s1">marioLives()</span>
+            
+            <span class="s0">#blit barrels if scoreWin and deathScene is false</span>
+            <span class="s2">if </span><span class="s1">scoreWin == </span><span class="s2">False and </span><span class="s1">deathScene == </span><span class="s2">False</span><span class="s1">:</span>
+                <span class="s1">barrel()</span>
+        
+        <span class="s0">#if user wins the level output winning sequence</span>
+        <span class="s2">elif </span><span class="s1">winLevel:</span>
+            <span class="s0">#calls drawing fucntions</span>
+            <span class="s1">win()</span>
+            <span class="s1">marioLives()</span>
+        
+        <span class="s0">#calls drawing fucntions</span>
+        <span class="s1">levelNumber()</span>
+        <span class="s1">playersScores(score</span><span class="s2">, </span><span class="s3">88</span><span class="s2">, </span><span class="s3">40</span><span class="s1">)</span>
+        <span class="s1">playersScores(highestScore</span><span class="s2">, </span><span class="s3">327</span><span class="s2">, </span><span class="s3">40</span><span class="s1">)</span>
+     
+    <span class="s0">#updating</span>
+    <span class="s1">pygame.display.update()</span>
+
+
+
+<span class="s0">#prints instructions on console</span>
+<span class="s1">instructions()</span>
+
+<span class="s0">#loop whole game if user wants to keep restarting</span>
+<span class="s1">pygame.init()</span>
+<span class="s1">walk = pygame.mixer.Sound(</span><span class="s4">&quot;walking</span><span class="s2">\\</span><span class="s4">walking.wav&quot;</span><span class="s1">)</span>
+<span class="s1">jump = pygame.mixer.Sound(</span><span class="s4">&quot;jump</span><span class="s2">\\</span><span class="s4">jump.wav&quot;</span><span class="s1">)</span>
+<span class="s1">intro = pygame.mixer.Sound(</span><span class="s4">&quot;intro1</span><span class="s2">\\</span><span class="s4">intro1.wav&quot;</span><span class="s1">)</span>
+<span class="s1">death = pygame.mixer.Sound(</span><span class="s4">&quot;death</span><span class="s2">\\</span><span class="s4">death.wav&quot;</span><span class="s1">)</span>
+<span class="s1">bac = pygame.mixer.music.load(</span><span class="s4">&quot;bacmusic</span><span class="s2">\\</span><span class="s4">bacmusic.wav&quot;</span><span class="s1">)</span>
+<span class="s1">death_cnt = </span><span class="s3">0</span>
+<span class="s0">#start creating a graphical program</span>
+<span class="s0">#Set Screen Dimensions</span>
+<span class="s1">WIDTH = </span><span class="s3">800</span>
+<span class="s1">HEIGHT = </span><span class="s3">800</span>
+<span class="s1">screen = pygame.display.set_mode((WIDTH</span><span class="s2">,</span><span class="s1">HEIGHT))</span>
+
+<span class="s0">#Name of Window Opened</span>
+<span class="s1">pygame.display.set_caption(</span><span class="s4">'Donkey Kong'</span><span class="s1">)</span>
+
+<span class="s0">#starting game play</span>
+<span class="s1">inPlay = </span><span class="s2">True</span>
+<span class="s1">pygame.mixer.music.play(-</span><span class="s3">1</span><span class="s1">)</span>
+
+
+    
+
+<span class="s2">while </span><span class="s1">replay:</span>
+
+    <span class="s0">#keep looping and keeping graphical interface is run while inPlay is true</span>
+    <span class="s2">while </span><span class="s1">inPlay:</span>
+        <span class="s2">for </span><span class="s1">event </span><span class="s2">in </span><span class="s1">pygame.event.get():</span>
+            <span class="s2">if </span><span class="s1">event.type == pygame.QUIT:</span>
+                <span class="s1">pygame.quit()</span>
+        
+        <span class="s0">#if the climbing is happening, check how much DK has climbed</span>
+        <span class="s2">if </span><span class="s1">pressed == </span><span class="s2">True and </span><span class="s1">climbDone == </span><span class="s2">False</span><span class="s1">:</span>
+            <span class="s0">#if he has just started, add to the level number</span>
+            <span class="s2">if </span><span class="s1">dkClimb == </span><span class="s3">0</span><span class="s1">:</span>
+                <span class="s1">levelNum = levelNum + </span><span class="s3">1</span>
+            
+            <span class="s0">#if DK has climbed 390 pixels, delay the program</span>
+            <span class="s2">if </span><span class="s1">dkClimb == </span><span class="s3">390</span><span class="s1">:</span>
+                <span class="s1">pygame.time.delay(</span><span class="s3">500</span><span class="s1">)</span>
+            
+            <span class="s0">#if DK has reached 560 pixels and over, reset the climbCount faster to make it look like he's jumping</span>
+            <span class="s2">if </span><span class="s1">dkClimb &gt;= </span><span class="s3">560</span><span class="s1">:</span>
+                <span class="s1">climbCount = -</span><span class="s3">20</span>
+            
+            <span class="s0">#DK hasn't reached 510 again on the way down from his jumping, keep adding to dkClimb</span>
+            <span class="s2">if </span><span class="s1">dkClimb != </span><span class="s3">510 </span><span class="s2">or </span><span class="s1">climbCount != -</span><span class="s3">20</span><span class="s1">:</span>
+                <span class="s1">dkClimb = dkClimb + climbCount</span>
+            
+            <span class="s0">#else DK has finished climbing and the variable is re-set</span>
+            <span class="s2">else</span><span class="s1">:</span>
+                <span class="s1">climbDone = </span><span class="s2">True</span>
+        
+        <span class="s0">#if DK has finished climbing but the intro is not done yet, move on to DK jumping</span>
+        <span class="s2">elif </span><span class="s1">climbDone </span><span class="s2">and </span><span class="s1">introDone == </span><span class="s2">False</span><span class="s1">:</span>
+            <span class="s0">#if the platNum is less than or equal to 6, DK is still jumping</span>
+            <span class="s2">if </span><span class="s1">platNum &lt;= </span><span class="s3">6</span><span class="s1">:</span>
+                <span class="s0">#if dkJumpY is 152, reset which way he's jumping to start going down</span>
+                <span class="s2">if </span><span class="s1">dkJumpY == </span><span class="s3">152</span><span class="s1">:</span>
+                    <span class="s1">dkJumpYNum = </span><span class="s3">10</span>
+                
+                <span class="s0">#if dkJumpY is 172, reset which way he's jumping to start going up</span>
+                <span class="s2">if </span><span class="s1">dkJumpY == </span><span class="s3">172</span><span class="s1">:</span>
+                    <span class="s1">dkJumpYNum = -</span><span class="s3">10</span>
+                    
+                    <span class="s0">#change the platNum to change the background image so that a platform &quot;falls&quot;</span>
+                    <span class="s1">platNum = platNum + </span><span class="s3">1</span>
+                
+                <span class="s0">#move DK to the left 12 pixels</span>
+                <span class="s1">dkJumpX = dkJumpX - </span><span class="s3">12</span>
+                
+                <span class="s0">#if platNum is not 6, keep jumping/changing the y coordinates</span>
+                <span class="s2">if </span><span class="s1">platNum != </span><span class="s3">6</span><span class="s1">:</span>
+                    <span class="s1">dkJumpY = dkJumpY + dkJumpYNum</span>
+                
+                <span class="s2">else</span><span class="s1">:</span>
+                    <span class="s1">introDone = </span><span class="s2">True</span>
+                    <span class="s1">pygame.time.delay(</span><span class="s3">1000</span><span class="s1">)</span>
+            <span class="s0">#else the intro is done and delay for a second before continuing</span>
+            <span class="s0">#else:</span>
+                <span class="s0"># introDone = True</span>
+                <span class="s0"># pygame.time.delay(1000)</span>
+        
+        <span class="s0">#if the gameStart is true, the game play has started</span>
+        <span class="s2">if </span><span class="s1">gameStart:</span>
+            
+            <span class="s0">#if scoreWin and winLevel are false, check for collisions</span>
+            <span class="s2">if </span><span class="s1">scoreWin == </span><span class="s2">False and </span><span class="s1">winLevel == </span><span class="s2">False</span><span class="s1">:</span>
+                <span class="s1">hit = collide()</span>
+            
+            <span class="s0">#checks if mario has hit a boundary to the left or right of him    </span>
+            <span class="s1">moveLeft</span><span class="s2">, </span><span class="s1">moveRight = boundaries(marioX</span><span class="s2">, </span><span class="s1">marioY)</span>
+            
+            <span class="s0">#if hit is fallse, mario has not hit a barrel and normal game play continues</span>
+            <span class="s2">if </span><span class="s1">hit == </span><span class="s2">False</span><span class="s1">:</span>
+                
+                <span class="s0">#checks if mario is on a ladder and whether he can go up, down or left and right</span>
+                <span class="s1">upLadder</span><span class="s2">, </span><span class="s1">downLadder</span><span class="s2">, </span><span class="s1">moveSides = ladderCheck()</span>
+                
+                <span class="s0">#if mario reaches a y value of less than or equal to 154, he has won the game</span>
+                <span class="s2">if </span><span class="s1">marioY &lt;= </span><span class="s3">154</span><span class="s1">:</span>
+                    <span class="s0">#reset variables </span>
+                    <span class="s1">winLevel = </span><span class="s2">True</span>
+                    <span class="s1">dkClimb = -</span><span class="s3">15</span>
+                    <span class="s1">climbCount = </span><span class="s3">15</span>
+                    <span class="s1">marioX = </span><span class="s3">150</span>
+                    <span class="s1">marioY = </span><span class="s3">720</span>
+                    <span class="s1">marioImage = marioRight</span>
+                
+                <span class="s0">#if mario is jumping, change x and/or y values accordingly</span>
+                <span class="s2">if </span><span class="s1">jumpLeft </span><span class="s2">or </span><span class="s1">jumpRight </span><span class="s2">or </span><span class="s1">jumpStill:</span>
+                    
+                    <span class="s0">#keeps track of how many jumps</span>
+                    <span class="s1">jumpCount = jumpCount + </span><span class="s3">1</span>
+                    
+                    <span class="s0">#changes y coordinates</span>
+                    <span class="s1">marioY = marioY + addJump</span>
+                    
+                    <span class="s0">#when jumpCount is 7, make mario come back down by change the number he goes up/down by</span>
+                    <span class="s2">if </span><span class="s1">jumpCount == </span><span class="s3">7</span><span class="s1">:</span>
+                        <span class="s1">addJump = </span><span class="s3">7</span>
+                    
+                    <span class="s0">#if jumpCount is 14, mario has come back down </span>
+                    <span class="s2">if </span><span class="s1">jumpCount == </span><span class="s3">14</span><span class="s1">:</span>
+                        
+                        <span class="s0">#if mario jumped over a barrel, add 100 to the score </span>
+                        <span class="s2">if </span><span class="s1">jumpPoint == </span><span class="s3">1</span><span class="s1">:</span>
+                            <span class="s1">score = score + </span><span class="s3">100</span>
+                        
+                        <span class="s0">#if mario was facing right, change the image back to him facing right, and change mario's Y value if he had jumpped over some inclines</span>
+                        <span class="s2">if </span><span class="s1">direction == </span><span class="s4">&quot;right&quot;</span><span class="s1">:</span>
+                            <span class="s1">marioImage = marioRight</span>
+                            <span class="s1">marioY = marioY - move*inclineCount</span>
+                        <span class="s0">#else mario was facing left, change the image back to him facing left, and change mario's Y value if he had jumpped over some inclines</span>
+                        <span class="s2">else</span><span class="s1">:</span>
+                            <span class="s1">marioImage = marioLeft</span>
+                            <span class="s1">marioY = marioY + move*inclineCount</span>
+                            
+                        <span class="s0">#reseting variables</span>
+                        <span class="s1">addJump = -</span><span class="s3">7</span>
+                        <span class="s1">jumpCount = </span><span class="s3">0</span>
+                        <span class="s1">jumpPoint = </span><span class="s3">0</span>
+                        <span class="s1">inclineCount = </span><span class="s3">0</span>
+                        
+                        <span class="s1">jumpLeft = </span><span class="s2">False</span>
+                        <span class="s1">jumpRight = </span><span class="s2">False</span>
+                        <span class="s1">jumpStill = </span><span class="s2">False</span>
+                        
+                    <span class="s0">#if mario has reached a boundary on the sides, don't add to x values</span>
+                    <span class="s2">if </span><span class="s1">marioX != </span><span class="s3">60 </span><span class="s2">and </span><span class="s1">marioX != </span><span class="s3">710 </span><span class="s2">and </span><span class="s1">(marioX != </span><span class="s3">320 </span><span class="s2">or </span><span class="s1">marioY &gt;= </span><span class="s3">232</span><span class="s1">):</span>
+                        <span class="s0">#checks how many inclines mario jumped over and whether to move up or down when mario lands</span>
+                        <span class="s1">move = incline(marioY</span><span class="s2">, </span><span class="s1">marioX</span><span class="s2">, </span><span class="s1">direction</span><span class="s2">, </span><span class="s4">&quot;mario&quot;</span><span class="s1">)</span>
+                        
+                        <span class="s0">#if mario is jumping left and he can move left, minus 5 to his x coordinates</span>
+                        <span class="s2">if </span><span class="s1">jumpLeft </span><span class="s2">and </span><span class="s1">moveLeft:</span>
+                            <span class="s1">marioX = marioX - </span><span class="s3">5</span>
+                        <span class="s0">#if mario is jumping right and he can move right, add 5 to his x coorinates</span>
+                        <span class="s2">elif </span><span class="s1">jumpRight </span><span class="s2">and </span><span class="s1">moveRight:</span>
+                            <span class="s1">marioX = marioX + </span><span class="s3">5</span>
+                    
+                    <span class="s0">#goes through all the barrels</span>
+                    <span class="s2">for </span><span class="s1">i </span><span class="s2">in </span><span class="s1">range(</span><span class="s3">0</span><span class="s2">, </span><span class="s1">len(barrelX)):</span>
+                        <span class="s0">#checks if mario has jumped over a barrel, if so, there is one point will be added if he completes the jump</span>
+                        <span class="s2">if </span><span class="s1">marioX &gt;= barrelX[i] </span><span class="s2">and </span><span class="s1">marioX &lt;= barrelX[i]+</span><span class="s3">28 </span><span class="s2">and </span><span class="s1">marioY &lt;= barrelY[i]-</span><span class="s3">23 </span><span class="s2">and </span><span class="s1">marioY &gt;= barrelY[i]-</span><span class="s3">65</span><span class="s1">:</span>
+                            <span class="s1">jumpPoint = </span><span class="s3">1</span>
+                
+                <span class="s0">#scoreWin is false, keep the barrels rolling</span>
+                <span class="s2">if </span><span class="s1">scoreWin == </span><span class="s2">False</span><span class="s1">:</span>
+                    
+                    <span class="s0">#goes through all the barrels</span>
+                    <span class="s2">for </span><span class="s1">i </span><span class="s2">in </span><span class="s1">range(</span><span class="s3">0</span><span class="s2">, </span><span class="s1">len(barrelPic)):</span>
+                        <span class="s0">#if the barrel reaches the end of the structure, make the barrel disappear off the screen</span>
+                        <span class="s2">if </span><span class="s1">barrelX[i] &lt;= </span><span class="s3">31</span><span class="s1">:</span>
+                            <span class="s1">barrelX[i] = -</span><span class="s3">30</span>
+                            <span class="s1">barrelY[i] = -</span><span class="s3">30</span>
+                        
+                        <span class="s0">#if the barrel is not falling, check to see if it is</span>
+                        <span class="s2">if </span><span class="s1">fall[i] == </span><span class="s2">False</span><span class="s1">:</span>
+                            <span class="s1">barrelLeft[i]</span><span class="s2">, </span><span class="s1">barrelRight[i] = boundaries(barrelX[i]</span><span class="s2">, </span><span class="s1">barrelY[i]-</span><span class="s3">15</span><span class="s1">)</span>
+                            
+                            <span class="s0">#reset variable if the barrel has hit a platform and can't move either left or right</span>
+                            <span class="s2">if </span><span class="s1">barrelLeft[i] == </span><span class="s2">False or </span><span class="s1">barrelRight[i] == </span><span class="s2">False</span><span class="s1">:</span>
+                                <span class="s1">fall[i] = </span><span class="s2">True</span>
+                        
+                        <span class="s0">#checks which platform the barrel is on to determine which direction it's going</span>
+                        <span class="s2">if </span><span class="s1">(barrelY[i] &lt;= </span><span class="s3">255 </span><span class="s2">and </span><span class="s1">barrelY[i] &gt;= </span><span class="s3">243</span><span class="s1">) </span><span class="s2">or </span><span class="s1">(barrelY[i] &lt;= </span><span class="s3">452 </span><span class="s2">and </span><span class="s1">barrelY[i] &gt;= </span><span class="s3">415</span><span class="s1">) </span><span class="s2">or </span><span class="s1">(barrelY[i] &lt;= </span><span class="s3">648 </span><span class="s2">and </span><span class="s1">barrelY[i] &gt;= </span><span class="s3">611</span><span class="s1">):</span>
+                            <span class="s1">barrelDirection[i] = </span><span class="s4">&quot;right&quot;</span>
+                            
+                        <span class="s2">elif </span><span class="s1">(barrelY[i] &lt;= </span><span class="s3">353 </span><span class="s2">and </span><span class="s1">barrelY[i] &gt;= </span><span class="s3">317</span><span class="s1">) </span><span class="s2">or </span><span class="s1">(barrelY[i] &lt;= </span><span class="s3">550 </span><span class="s2">and </span><span class="s1">barrelY[i] &gt;= </span><span class="s3">513</span><span class="s1">) </span><span class="s2">or </span><span class="s1">(barrelY[i] &lt;= </span><span class="s3">731 </span><span class="s2">and </span><span class="s1">barrelY[i] &gt;= </span><span class="s3">709</span><span class="s1">):</span>
+                            <span class="s1">barrelDirection[i] = </span><span class="s4">&quot;left&quot;</span>
+                        
+                        <span class="s0">#if the barrel is not on a ladder it is either rolling or falling</span>
+                        <span class="s2">if </span><span class="s1">barrelPic[i] != barrelDown:</span>
+                            
+                            <span class="s0">#if the barrel is not falling, it is rolling left or right</span>
+                            <span class="s2">if </span><span class="s1">fall[i] == </span><span class="s2">False</span><span class="s1">:</span>
+                                
+                                <span class="s2">if </span><span class="s1">barrelDirection[i] == </span><span class="s4">&quot;right&quot;</span><span class="s1">:</span>
+                                    <span class="s1">barrelX[i] = barrelX[i] + </span><span class="s3">10</span>
+                                <span class="s2">else</span><span class="s1">:</span>
+                                    <span class="s1">barrelX[i] = barrelX[i] - </span><span class="s3">10</span>
+                                
+                                <span class="s0">#checks if the barrel needs to incline up/down and changes the value in the function</span>
+                                <span class="s1">barrelY[i] = incline(barrelY[i]-</span><span class="s3">11</span><span class="s2">, </span><span class="s1">barrelX[i]</span><span class="s2">, </span><span class="s1">barrelDirection[i]</span><span class="s2">, </span><span class="s4">&quot;barrel&quot;</span><span class="s1">)</span>
+                                <span class="s1">barrelY[i] = barrelY[i] + </span><span class="s3">11</span>
+                                <span class="s0">#subtracted 11 then added it back so that in the function, the values that the functions checks with the y value can be used for both the barrel and mario</span>
+
+                            <span class="s0">#else the barrel is in the process of falling    </span>
+                            <span class="s2">else</span><span class="s1">:</span>
+                                <span class="s0">#add one to keep track of how long it has fallen</span>
+                                <span class="s1">fallCount[i] = fallCount[i] + </span><span class="s3">1</span>
+                                
+                                <span class="s0">#if the barrel is falling on the left side, x is being subtracted by 5</span>
+                                <span class="s2">if </span><span class="s1">barrelLeft[i] == </span><span class="s2">False</span><span class="s1">:</span>
+                                    <span class="s1">barrelX[i] = barrelX[i] - </span><span class="s3">5</span>
+                                
+                                <span class="s0">#if it's falling from the right x is being added by 5</span>
+                                <span class="s2">elif </span><span class="s1">barrelRight[i] == </span><span class="s2">False</span><span class="s1">:</span>
+                                    <span class="s1">barrelX[i] = barrelX[i] + </span><span class="s3">5</span>
+                                
+                                <span class="s0">#changing y by 7 each time    </span>
+                                <span class="s1">barrelY[i] = barrelY[i] + </span><span class="s3">7</span>
+                                
+                                <span class="s0">#if the count has reached 8, stop falling and reset the values for the next time</span>
+                                <span class="s2">if </span><span class="s1">fallCount[i] == </span><span class="s3">8</span><span class="s1">:</span>
+                                    <span class="s0">#adjust to make sure it lands on platform right</span>
+                                    <span class="s1">barrelY[i] = barrelY[i] + </span><span class="s3">6</span>
+                                    
+                                    <span class="s0">#resetting variables</span>
+                                    <span class="s1">fallCount[i] = </span><span class="s3">0</span>
+                                    <span class="s1">fall[i] = </span><span class="s2">False</span>
+                                    <span class="s1">barrelLeft[i] = </span><span class="s2">True</span>
+                                    <span class="s1">barrelRight[i] = </span><span class="s2">True</span>
+                            
+                            <span class="s0">#changes the picture of the barrel each time</span>
+                            <span class="s0">#if the barrelPic is at index 3, change it to at index 0</span>
+                            <span class="s2">if </span><span class="s1">barrelPic[i] == barrelSequence[</span><span class="s3">3</span><span class="s1">]:</span>
+                                <span class="s1">barrelPic[i] = barrelSequence[</span><span class="s3">0</span><span class="s1">]</span>
+                                
+                            <span class="s0">#else change it to the next number in the list</span>
+                            <span class="s2">else</span><span class="s1">:</span>
+                                <span class="s2">for </span><span class="s1">j </span><span class="s2">in </span><span class="s1">range(</span><span class="s3">0</span><span class="s2">, </span><span class="s1">len(barrelSequence)-</span><span class="s3">1</span><span class="s1">):</span>
+                                    <span class="s2">if </span><span class="s1">barrelPic[i] == barrelSequence[j]:</span>
+                                        <span class="s1">barrelPic[i] = barrelSequence[j+</span><span class="s3">1</span><span class="s1">]</span>
+                        
+                        <span class="s0">#if the barrelPic[i] is barrel down, the barrel is going down a ladder and add 10 to the y value each time                </span>
+                        <span class="s2">else</span><span class="s1">:</span>
+                            <span class="s1">barrelY[i] = barrelY[i] + </span><span class="s3">10</span>
+                        
+                        <span class="s0">#goes through all the ladder coordinates for the barrels</span>
+                        <span class="s2">for </span><span class="s1">j </span><span class="s2">in </span><span class="s1">range(</span><span class="s3">0</span><span class="s2">, </span><span class="s1">len(barrelLadderX)):</span>
+                            <span class="s0">#if the barrel's x and y coordinates are same as both barrelLadderX[j] and barrelLadderY[j], respectively, use a random number to choose whether the barrel should go down it or not</span>
+                            <span class="s2">if </span><span class="s1">barrelX[i] == barrelLadderX[j] </span><span class="s2">and </span><span class="s1">barrelY[i] == barrelLadderY1[j]:</span>
+                                <span class="s1">barrelChoice = random.randint(</span><span class="s3">0</span><span class="s2">, </span><span class="s3">1</span><span class="s1">)</span>
+                                
+                                <span class="s0">#if the random number that was picked is 0, the barrel image and coordinates will be reset</span>
+                                <span class="s2">if </span><span class="s1">barrelChoice == </span><span class="s3">0</span><span class="s1">:</span>
+                                    <span class="s1">barrelPic[i] = barrelDown</span>
+                                    
+                                    <span class="s0">#adjust a bit because the barrel going down is wider than the other barrel images</span>
+                                    <span class="s1">barrelX[i] = barrelX[i] - </span><span class="s3">2</span>
+                            
+                            <span class="s0">#if the barrel has reached the end of a ladder, reset the variables back</span>
+                            <span class="s2">if </span><span class="s1">barrelX[i]+</span><span class="s3">2 </span><span class="s1">== barrelLadderX[j] </span><span class="s2">and </span><span class="s1">barrelY[i] == barrelLadderY2[j]:</span>
+                                <span class="s1">barrelPic[i] = barrelSequence[</span><span class="s3">0</span><span class="s1">]</span>
+                                <span class="s1">barrelX[i] = barrelX[i] + </span><span class="s3">2</span>
+                                
+                                <span class="s0">#this makes sure that when it comes down it lands properly on the platform instead of 5 pixels too high, as the barrels move 10 pixels at a time</span>
+                                <span class="s1">barrelY[i] = barrelY[i] + barrelAdjust[j]</span>
+                    
+                    <span class="s0">#if throwBarrel is false, get a random number to decide whether or not DK will throw another barrel        </span>
+                    <span class="s2">if </span><span class="s1">throwBarrel == </span><span class="s2">False</span><span class="s1">:</span>
+                        <span class="s0">#after each level the range will be smaller, meaning a higher chance of throwing barrels</span>
+                        <span class="s1">dkChoice = random.randint(</span><span class="s3">0</span><span class="s2">, </span><span class="s3">50</span><span class="s1">-difficulty)</span>
+                        
+                        <span class="s0">#if the number is 0, reset variables to throw the barrel</span>
+                        <span class="s2">if </span><span class="s1">dkChoice == </span><span class="s3">0</span><span class="s1">:</span>
+                            <span class="s1">dkImage = dkLeft</span>
+                            <span class="s1">throwBarrel = </span><span class="s2">True</span>
+                        <span class="s0">#else, don't throw any barrels    </span>
+                        <span class="s2">else</span><span class="s1">:</span>
+                            <span class="s1">dkImage = dkForward</span>
+                            <span class="s1">throwBarrel = </span><span class="s2">False</span>
+                    
+                    <span class="s0">#if throwBarrel is true, go through these changes</span>
+                    <span class="s2">if </span><span class="s1">throwBarrel:</span>
+                        
+                        <span class="s0">#add to give DK some time to get barrel</span>
+                        <span class="s1">throwCountdown = throwCountdown + </span><span class="s3">1</span>
+                        
+                        <span class="s0">#if throwCountdown is 20, create a new barrel</span>
+                        <span class="s2">if </span><span class="s1">throwCountdown == </span><span class="s3">20</span><span class="s1">:</span>
+                            <span class="s0">#reset variable</span>
+                            <span class="s1">dkImage = dkRight</span>
+                            
+                            <span class="s0">#declaring new barrel information</span>
+                            <span class="s1">barrelX.append(</span><span class="s3">250</span><span class="s1">)</span>
+                            <span class="s1">barrelY.append(</span><span class="s3">243</span><span class="s1">)</span>
+                            <span class="s1">barrelDirection.append(</span><span class="s4">&quot;right&quot;</span><span class="s1">)</span>
+                            <span class="s1">barrelPic.append(barrel1)</span>
+                            <span class="s1">fall.append(</span><span class="s2">False</span><span class="s1">)</span>
+                            <span class="s1">fallCount.append(</span><span class="s3">0</span><span class="s1">)</span>
+                            <span class="s1">barrelLeft.append(</span><span class="s2">True</span><span class="s1">)</span>
+                            <span class="s1">barrelRight.append(</span><span class="s2">True</span><span class="s1">)</span>
+                            
+                        <span class="s0">#if throwCountdown reaches 40, reset variables to when DK wasn't throwing    </span>
+                        <span class="s2">if </span><span class="s1">throwCountdown == </span><span class="s3">40</span><span class="s1">:</span>
+                            <span class="s1">throwCountdown = </span><span class="s3">0</span>
+                            <span class="s1">dkImage = dkForward</span>
+                            <span class="s1">throwBarrel = </span><span class="s2">False</span>
+            
+            <span class="s0">#else, mario gets hit, start the death sequences</span>
+            <span class="s2">else</span><span class="s1">:</span>
+                <span class="s0">#if the deathScene is not done</span>
+                <span class="s2">if not </span><span class="s1">pygame.mixer.get_busy():</span>
+                    <span class="s1">pygame.mixer.Sound.play(death)</span>
+
+                <span class="s2">if </span><span class="s1">deathScene == </span><span class="s2">False</span><span class="s1">:</span>
+                    <span class="s0">#moves the dead mario's y coordinates down to make sure he rests where his feet were, not where his head was</span>
+                    <span class="s2">if </span><span class="s1">deathCount == </span><span class="s3">0</span><span class="s1">:</span>
+                        <span class="s1">marioY = marioY + </span><span class="s3">10</span>
+                    
+                    <span class="s1">deathCount = deathCount + </span><span class="s3">1</span>
+                    
+                    <span class="s0">#when the count reaches 60, the short delay is over, reset variables, and lose a life</span>
+                    <span class="s2">if </span><span class="s1">deathCount == </span><span class="s3">60</span><span class="s1">:</span>
+                        <span class="s1">deathScene = </span><span class="s2">True</span>
+                        <span class="s1">deathCount = </span><span class="s3">0 </span>
+                        <span class="s1">lives = lives - </span><span class="s3">1</span>
+                    
+                    <span class="s0">#resets variables</span>
+                    <span class="s1">marioImage = dead</span>
+                    
+                <span class="s0">#if deathScene is true, reset variables to start at the beginning of level again</span>
+                <span class="s2">else</span><span class="s1">:</span>
+                    <span class="s1">startDone = </span><span class="s2">False</span>
+                    <span class="s1">gameStart = </span><span class="s2">False</span>
+                    <span class="s1">throwBarrel = </span><span class="s2">False</span>
+                    <span class="s1">deathScene = </span><span class="s2">False</span>
+                    <span class="s1">hit = </span><span class="s2">False</span>
+                    <span class="s1">jumpLeft = </span><span class="s2">False</span>
+                    <span class="s1">jumpRight = </span><span class="s2">False</span>
+                    <span class="s1">jumpStill = </span><span class="s2">False</span>
+                    <span class="s1">barrelX = []</span>
+                    <span class="s1">barrelY = []    </span>
+                    <span class="s1">barrelPic = []</span>
+                    <span class="s1">throwCountdown = </span><span class="s3">0</span>
+                    <span class="s1">barrelDirection = []</span>
+                    <span class="s1">fall = []</span>
+                    <span class="s1">fallCount = []</span>
+                    <span class="s1">barrelLeft = []</span>
+                    <span class="s1">barrelRight = []</span>
+                    <span class="s1">inclineCount = </span><span class="s3">0</span>
+                    <span class="s1">jumpPoint = </span><span class="s3">0</span>
+                    <span class="s1">marioX = </span><span class="s3">150</span>
+                    <span class="s1">marioY = </span><span class="s3">720</span>
+                    <span class="s1">addJump = -</span><span class="s3">7</span>
+                    <span class="s1">jumpCount = </span><span class="s3">0</span>
+                    <span class="s1">direction = </span><span class="s4">&quot;right&quot;</span>
+                    <span class="s1">marioImage = marioRight</span>
+                
+                <span class="s0">#if lives is less than 0, gameDone is True, and put score in leaderboards and find the high score using highScore()</span>
+                <span class="s2">if </span><span class="s1">lives &lt; </span><span class="s3">0</span><span class="s1">:</span>
+                    <span class="s1">gameDone = </span><span class="s2">True</span>
+                    <span class="s1">highestScore = highScore()</span>
+        
+        <span class="s0">#if the score reaches over 999999, you win the game</span>
+        <span class="s2">if </span><span class="s1">score &gt;= </span><span class="s3">999999</span><span class="s1">:</span>
+            <span class="s0">#resetting values</span>
+            <span class="s1">score = </span><span class="s3">999999  </span><span class="s0">#this is the max number the game can output</span>
+            <span class="s1">scoreWin = </span><span class="s2">True</span>
+            <span class="s1">dkImage = dkDefeat</span>
+        
+        <span class="s0">#if you win the level, start winLevel processes</span>
+        <span class="s2">if </span><span class="s1">winLevel:</span>
+            <span class="s0">#if the levelNum is 5 or scoreWin is true, reset values to output correct images in redraw_screen</span>
+            <span class="s2">if </span><span class="s1">levelNum == </span><span class="s3">5 </span><span class="s2">or </span><span class="s1">scoreWin:</span>
+                <span class="s0">#if this is false, reset values to start the end of the game</span>
+                <span class="s2">if </span><span class="s1">winGameSceneDone == </span><span class="s2">False</span><span class="s1">:</span>
+                    <span class="s1">dkImage = dkDefeat</span>
+                    <span class="s1">winGameSceneOutput = </span><span class="s2">True</span>
+                <span class="s0">#else, add to the confetti's y coordinates find the highscore and put user's score into leadboard</span>
+                <span class="s2">else</span><span class="s1">:</span>
+                    <span class="s0"># goes through all the confetti circles</span>
+                    <span class="s2">for </span><span class="s1">i </span><span class="s2">in </span><span class="s1">range(</span><span class="s3">0</span><span class="s2">, </span><span class="s3">400</span><span class="s1">):</span>
+                        <span class="s0">#add to make if fall down</span>
+                        <span class="s1">confettiY[i] = confettiY[i] + confettiSpeed[i]</span>
+                    <span class="s1">highestScore = highScore()</span>
+                
+                <span class="s0">#reset values</span>
+                <span class="s1">gameStart = </span><span class="s2">False</span>
+                <span class="s1">winGame = </span><span class="s2">True</span>
+            
+            <span class="s0">#else, continue on to the next level</span>
+            <span class="s2">else</span><span class="s1">:</span>
+                
+                <span class="s0">#DK climbs up</span>
+                <span class="s1">dkClimb = dkClimb + climbCount</span>
+                
+                <span class="s0">#if DK climbs 15 pixels, add 250 to the score and delay for time</span>
+                <span class="s2">if </span><span class="s1">dkClimb == </span><span class="s3">15</span><span class="s1">:</span>
+                    <span class="s1">score = score + </span><span class="s3">250</span>
+                    <span class="s1">pygame.time.delay(</span><span class="s3">1000</span><span class="s1">)</span>
+                
+                <span class="s0">#if DK climbs less than or equal to 30 pixels, the two images are dk not holding pauline</span>
+                <span class="s2">if </span><span class="s1">dkClimb &lt;= </span><span class="s3">30</span><span class="s1">:</span>
+                    <span class="s1">dkImage1 = dkEmptyClimb1</span>
+                    <span class="s1">dkImage2 = dkEmptyClimb2</span>
+                    <span class="s1">moveOver1 = </span><span class="s3">0</span>
+                    <span class="s1">moveOver2 = </span><span class="s3">0</span>
+                <span class="s0">#else, dk is holding pauline in these two images</span>
+                <span class="s2">else</span><span class="s1">:</span>
+                    <span class="s1">dkImage1 = dkUp1</span>
+                    <span class="s1">dkImage2 = dkUp2</span>
+                    
+                    <span class="s0">#adjusts image so that he climbs up smoothly</span>
+                    <span class="s1">moveOver1 = </span><span class="s3">13</span>
+                    <span class="s1">moveOver2 = </span><span class="s3">35</span>
+                
+                <span class="s0">#if DK has climbed 150 pixels, reset variables for the next level</span>
+                <span class="s2">if </span><span class="s1">dkClimb == </span><span class="s3">150</span><span class="s1">: </span>
+                    <span class="s1">winLevel = </span><span class="s2">False</span>
+                    <span class="s1">climbDone = </span><span class="s2">False</span>
+                    <span class="s1">introDone = </span><span class="s2">False</span>
+                    <span class="s1">startDone = </span><span class="s2">False</span>
+                    <span class="s1">gameStart = </span><span class="s2">False</span>
+                    <span class="s1">throwBarrel = </span><span class="s2">False</span>
+                    <span class="s1">jumpLeft = </span><span class="s2">False</span>
+                    <span class="s1">jumpRight = </span><span class="s2">False</span>
+                    <span class="s1">jumpStill = </span><span class="s2">False</span>
+                    <span class="s1">hit = </span><span class="s2">False</span>
+                    <span class="s1">barrelX = []</span>
+                    <span class="s1">barrelY = []    </span>
+                    <span class="s1">barrelPic = []</span>
+                    <span class="s1">barrelDirection = []</span>
+                    <span class="s1">fall = []</span>
+                    <span class="s1">fallCount = []</span>
+                    <span class="s1">barrelLeft = []</span>
+                    <span class="s1">barrelRight = []</span>
+                    <span class="s1">inclineCount = </span><span class="s3">0</span>
+                    <span class="s1">dkClimb = </span><span class="s3">0</span>
+                    <span class="s1">platNum = </span><span class="s3">0</span>
+                    <span class="s1">climbCount = </span><span class="s3">15</span>
+                    <span class="s1">dkJumpX = </span><span class="s3">378</span>
+                    <span class="s1">dkJumpY = </span><span class="s3">172</span>
+                    <span class="s1">dkJumpYNum = </span><span class="s3">0</span>
+                    <span class="s1">addJump = -</span><span class="s3">7</span>
+                    <span class="s1">jumpCount = </span><span class="s3">0</span>
+                    <span class="s1">direction = </span><span class="s4">&quot;right&quot;</span>
+                    
+                    <span class="s0">#to make the next level more difficult</span>
+                    <span class="s1">difficulty = difficulty + </span><span class="s3">8</span>
+            
+        <span class="s0">#deals with any keyboard options once program is run</span>
+        <span class="s0">#looks for the event (action of using keyboard)</span>
+        <span class="s1">pygame.event.get()</span>
+        
+        <span class="s0"># get_pressed() method generates a True/False list for the status of all keys</span>
+        <span class="s1">keys = pygame.key.get_pressed()</span>
+        
+        <span class="s0">#looks for escape to be pressed</span>
+        <span class="s2">if </span><span class="s1">keys[pygame.K_ESCAPE]:</span>
+            <span class="s0">#finds highscore and adds score to the dictionary</span>
+            <span class="s1">highestScore = highScore()</span>
+            
+            <span class="s0">#reset variables to quit program</span>
+            <span class="s1">inPlay = </span><span class="s2">False</span>
+            <span class="s1">replay = </span><span class="s2">False</span>
+        
+        <span class="s0">#looks for space to be pressed to make pressed True and start the game</span>
+        <span class="s2">if </span><span class="s1">keys[pygame.K_SPACE]:</span>
+            <span class="s1">pressed = </span><span class="s2">True</span>
+            <span class="s2">if not </span><span class="s1">pygame.mixer.get_busy():</span>
+                <span class="s1">pygame.mixer.Sound.play(intro)</span>
+
+
+        
+        <span class="s0">#must satisfy all these conditions in order for pressing  the left, right, up, down, space(for jumping), and return key to do anything</span>
+        <span class="s2">if </span><span class="s1">(gameStart </span><span class="s2">and </span><span class="s1">jumpLeft == </span><span class="s2">False and </span><span class="s1">jumpRight == </span><span class="s2">False and </span><span class="s1">jumpStill == </span><span class="s2">False and </span><span class="s1">winLevel == </span><span class="s2">False and </span><span class="s1">hit == </span><span class="s2">False</span><span class="s1">) </span><span class="s2">or </span><span class="s1">gameDone </span><span class="s2">or </span><span class="s1">winGame:      </span>
+            
+            <span class="s0">#looks for left arrow to be pressed</span>
+            <span class="s2">if </span><span class="s1">keys[pygame.K_LEFT] </span><span class="s2">and </span><span class="s1">moveSides </span><span class="s2">and </span><span class="s1">(marioX != </span><span class="s3">320 </span><span class="s2">or </span><span class="s1">marioY &gt; </span><span class="s3">232</span><span class="s1">) </span><span class="s2">and </span><span class="s1">moveLeft </span><span class="s2">and </span><span class="s1">marioX != </span><span class="s3">60</span><span class="s1">:</span>
+                <span class="s0">#changes mario's y to incline up/go down with the slope</span>
+                <span class="s1">marioY = incline(marioY</span><span class="s2">, </span><span class="s1">marioX</span><span class="s2">, </span><span class="s1">direction</span><span class="s2">, </span><span class="s4">&quot;mario&quot;</span><span class="s1">)</span>
+                <span class="s0"># if mario is already facing left, subtract 5 from marioX</span>
+                <span class="s2">if </span><span class="s1">direction == </span><span class="s4">&quot;left&quot;</span><span class="s1">:</span>
+                    <span class="s1">marioX = marioX - </span><span class="s3">5</span>
+                
+                <span class="s0">#if the images for mario is marioLeft change it to runLeft</span>
+                <span class="s2">if </span><span class="s1">marioImage == marioLeft:</span>
+                    <span class="s1">marioImage = runLeft</span>
+                    <span class="s2">if not </span><span class="s1">pygame.mixer.get_busy():</span>
+                        <span class="s1">pygame.mixer.Sound.play(walk)</span>
+
+
+                <span class="s0">#else, change it to marioLeft</span>
+                <span class="s2">else</span><span class="s1">:</span>
+                    <span class="s1">marioImage = marioLeft</span>
+                    
+                <span class="s0">#if space is pressed while left is also being pressed, jumpLeft is True and change the image </span>
+                <span class="s2">if </span><span class="s1">keys[pygame.K_SPACE]:</span>
+                    <span class="s1">jumpLeft = </span><span class="s2">True</span>
+                    <span class="s1">marioImage = marioJumpLeft</span>
+                    <span class="s0"># if not pygame.mixer.get_busy():</span>
+                    <span class="s1">pygame.mixer.Sound.stop(walk)</span>
+                    <span class="s1">pygame.mixer.Sound.play(jump)</span>
+                
+                <span class="s1">direction = </span><span class="s4">&quot;left&quot;</span>
+            <span class="s0">#looks for right arrow to be pressed   </span>
+            <span class="s2">elif </span><span class="s1">keys[pygame.K_RIGHT] </span><span class="s2">and </span><span class="s1">moveSides </span><span class="s2">and </span><span class="s1">moveRight </span><span class="s2">and </span><span class="s1">marioX != </span><span class="s3">710</span><span class="s1">:</span>
+                <span class="s0">#changes mario's y to incline up/go down with the slope</span>
+                <span class="s1">marioY = incline(marioY</span><span class="s2">, </span><span class="s1">marioX</span><span class="s2">, </span><span class="s1">direction</span><span class="s2">, </span><span class="s4">&quot;mario&quot;</span><span class="s1">)</span>
+                
+                <span class="s0">#if mario was already facing right, add 5 to the x value</span>
+                <span class="s2">if </span><span class="s1">direction == </span><span class="s4">&quot;right&quot;</span><span class="s1">:</span>
+                    <span class="s1">marioX = marioX + </span><span class="s3">5</span>
+                <span class="s0">#if the images for mario is marioRight change it to runRight</span>
+                <span class="s2">if </span><span class="s1">marioImage == marioRight:</span>
+                    <span class="s1">marioImage = runRight</span>
+                    <span class="s2">if not </span><span class="s1">pygame.mixer.get_busy():</span>
+                        <span class="s1">pygame.mixer.Sound.play(walk)</span>
+                <span class="s0">#else change it to marioRight</span>
+                <span class="s2">else</span><span class="s1">:</span>
+                    <span class="s1">marioImage = marioRight</span>
+                
+                <span class="s0">#if space is pressed while right is also being pressed, jumpRight is True and change the image</span>
+                <span class="s2">if </span><span class="s1">keys[pygame.K_SPACE]:</span>
+                    <span class="s1">jumpRight = </span><span class="s2">True</span>
+                    <span class="s1">marioImage = marioJumpRight</span>
+                    <span class="s1">pygame.mixer.Sound.stop(walk)</span>
+                    <span class="s1">pygame.mixer.Sound.play(jump)</span>
+                <span class="s1">direction = </span><span class="s4">&quot;right&quot;</span>
+            
+            <span class="s0">#looks for up arrow to be pressed   </span>
+            <span class="s2">elif not </span><span class="s1">keys[pygame.K_LEFT] </span><span class="s2">or not </span><span class="s1">keys[pygame.K_RIGHT]:</span>
+                <span class="s1">pygame.mixer.Sound.stop(walk)</span>
+            <span class="s2">if </span><span class="s1">keys[pygame.K_UP] </span><span class="s2">and </span><span class="s1">(upLadder </span><span class="s2">or </span><span class="s1">gameDone </span><span class="s2">or </span><span class="s1">winGame):</span>
+                <span class="s0"># if upLadder is true, move mario up 5 pixels</span>
+                <span class="s2">if </span><span class="s1">upLadder:</span>
+                    <span class="s1">marioY = marioY - </span><span class="s3">5</span>
+                    
+                    <span class="s0">#if marioImage is marioClimb1, change it to marioClimb2</span>
+                    <span class="s2">if </span><span class="s1">marioImage == marioClimb1:</span>
+                        <span class="s1">marioImage = marioClimb2</span>
+                    <span class="s0">#otherwise, change it to marioClimb1</span>
+                    <span class="s2">else</span><span class="s1">:</span>
+                        <span class="s1">marioImage = marioClimb1</span>
+                
+                <span class="s0">#if the user is on one of the menus, change the option to select the top one</span>
+                <span class="s2">if </span><span class="s1">gameDone </span><span class="s2">or </span><span class="s1">winGame:</span>
+                    <span class="s1">option = </span><span class="s4">&quot;top&quot;</span>
+            
+            <span class="s0">#looks for down arrow to be pressed and only excutes when you can go down a ladder, and to sele</span>
+            <span class="s2">if </span><span class="s1">keys[pygame.K_DOWN] </span><span class="s2">and </span><span class="s1">(downLadder </span><span class="s2">or </span><span class="s1">gameDone </span><span class="s2">or </span><span class="s1">winGame):</span>
+                <span class="s0">#if downLadder is true, change mario's y coordinates to go down</span>
+                <span class="s2">if </span><span class="s1">downLadder:</span>
+                    <span class="s1">marioY = marioY + </span><span class="s3">5</span>
+                    
+                    <span class="s0">#if marioImage is marioClimb1, change it to marioClimb2</span>
+                    <span class="s2">if </span><span class="s1">marioImage == marioClimb1:</span>
+                        <span class="s1">marioImage = marioClimb2</span>
+                    <span class="s0">#otherwise, change it to marioClimb1</span>
+                    <span class="s2">else</span><span class="s1">:</span>
+                        <span class="s1">marioImage = marioClimb1</span>
+                
+                <span class="s0">#if user is on one of the menus, change the option to select the bottom one</span>
+                <span class="s2">if </span><span class="s1">gameDone </span><span class="s2">or </span><span class="s1">winGame:</span>
+                    <span class="s1">option = </span><span class="s4">&quot;bottom&quot;</span>
+            
+            <span class="s0">#looks for space bar to be pressed and can only do something when mario already jumping left or right and you're not in the middle of a ladder</span>
+            <span class="s2">if </span><span class="s1">keys[pygame.K_SPACE] </span><span class="s2">and </span><span class="s1">jumpLeft == </span><span class="s2">False and </span><span class="s1">jumpRight == </span><span class="s2">False and </span><span class="s1">moveSides:</span>
+                <span class="s0">#it makes jumpStil true</span>
+                <span class="s1">jumpStill = </span><span class="s2">True</span>
+                
+                <span class="s0">#if you are facing left, blit the image of mario jumping, facing right</span>
+                <span class="s2">if </span><span class="s1">direction == </span><span class="s4">&quot;right&quot;</span><span class="s1">:</span>
+                    <span class="s1">marioImage = marioJumpRight</span>
+                    
+                <span class="s0">#else blit mario jumping and facing left</span>
+                <span class="s2">else</span><span class="s1">:</span>
+                    <span class="s1">marioImage = marioJumpLeft</span>
+            
+            <span class="s0">#looks for return to be pressed and it can only do something when the game is lost or won</span>
+            <span class="s2">if </span><span class="s1">keys[pygame.K_RETURN] </span><span class="s2">and </span><span class="s1">(gameDone </span><span class="s2">or </span><span class="s1">winGame):</span>
+                <span class="s0">#if the top option is selected, reset the game</span>
+                <span class="s2">if </span><span class="s1">option == </span><span class="s4">&quot;top&quot;</span><span class="s1">:</span>
+                    
+                    <span class="s0">#reset variables to restart</span>
+                    <span class="s1">inPlay = </span><span class="s2">False</span>
+                    <span class="s1">winLevel = </span><span class="s2">False</span>
+                    <span class="s1">pressed = </span><span class="s2">False</span>
+                    <span class="s1">climbDone = </span><span class="s2">False</span>
+                    <span class="s1">introDone = </span><span class="s2">False</span>
+                    <span class="s1">gameStart = </span><span class="s2">False</span>
+                    <span class="s1">startDone = </span><span class="s2">False</span>
+                    <span class="s1">gameDone = </span><span class="s2">False</span>
+                    <span class="s1">throwBarrel = </span><span class="s2">False</span>
+                    <span class="s1">jumpLeft = </span><span class="s2">False</span>
+                    <span class="s1">jumpRight = </span><span class="s2">False</span>
+                    <span class="s1">jumpStill = </span><span class="s2">False</span>
+                    <span class="s1">winGame = </span><span class="s2">False</span>
+                    <span class="s1">winLevel = </span><span class="s2">False</span>
+                    <span class="s1">deathScene = </span><span class="s2">False</span>
+                    <span class="s1">scoreWin = </span><span class="s2">False</span>
+                    <span class="s1">winGameSceneDone = </span><span class="s2">False</span>
+                    <span class="s1">score = </span><span class="s3">0</span>
+                    <span class="s1">levelNum = </span><span class="s3">0</span>
+                    <span class="s1">dkClimb = </span><span class="s3">0</span>
+                    <span class="s1">climbCount = </span><span class="s3">15</span>
+                    <span class="s1">platNum = </span><span class="s3">0</span>
+                    <span class="s1">dkJumpX = </span><span class="s3">378</span>
+                    <span class="s1">dkJumpY = </span><span class="s3">172</span>
+                    <span class="s1">dkJumpYNum = </span><span class="s3">0</span>
+                    <span class="s1">marioX = </span><span class="s3">150</span>
+                    <span class="s1">marioY = </span><span class="s3">720</span>
+                    <span class="s1">addJump = -</span><span class="s3">7</span>
+                    <span class="s1">marioJumpCount = </span><span class="s3">0</span>
+                    <span class="s1">lives = </span><span class="s3">2</span>
+                    <span class="s1">difficulty = </span><span class="s3">0</span>
+                    <span class="s1">barrelX = []</span>
+                    <span class="s1">barrelY = []    </span>
+                    <span class="s1">barrelPic = []</span>
+                    <span class="s1">throwCountdown = </span><span class="s3">0</span>
+                    <span class="s1">barrelDirection = []</span>
+                    <span class="s1">fall = []</span>
+                    <span class="s1">fallCount = []</span>
+                    <span class="s1">barrelLeft = []</span>
+                    <span class="s1">barrelRight = []</span>
+                
+                <span class="s0">#if the bottom option is selected, you will quit the game    </span>
+                <span class="s2">elif </span><span class="s1">option == </span><span class="s4">&quot;bottom&quot;</span><span class="s1">:</span>
+                    <span class="s0">#reset variables</span>
+                    <span class="s1">inPlay = </span><span class="s2">False</span>
+                    <span class="s1">replay = </span><span class="s2">False</span>
+        <span class="s1">clock.tick(</span><span class="s3">30</span><span class="s1">)</span>
+        <span class="s1">pygame.display.update()      </span>
+        <span class="s2">if </span><span class="s1">inPlay:</span>
+            <span class="s1">redraw_screen()                 </span><span class="s0"># the screen window must be constantly redrawn - animation</span>
+            <span class="s0"># pygame.time.delay(30)           # pause for 20 miliseconds</span>
+        
+        <span class="s2">if </span><span class="s1">startOutput:</span>
+            <span class="s0"># pygame.time.delay(2000)</span>
+            
+            <span class="s1">startOutput = </span><span class="s2">False</span>
+            <span class="s1">gameStart = </span><span class="s2">True</span>
+        
+        <span class="s2">if </span><span class="s1">winGameSceneOutput:</span>
+            <span class="s0"># pygame.time.delay(2500)</span>
+            
+            <span class="s1">winGameSceneOutput = </span><span class="s2">False</span>
+            <span class="s1">winGameSceneDone = </span><span class="s2">True</span>
+
+    <span class="s0">#---------------------------------------#</span>
+    <span class="s1">pygame.quit()                      </span><span class="s0"># always quit pygame when done!        </span>
+
+<span class="s1">pygame.quit</span></pre>
+</body>
+</html>
